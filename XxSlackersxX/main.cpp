@@ -7,6 +7,26 @@
  *
  *	Author: Jack Wesley Nelson, Stephen Unger, Jamie Koning - Fall 2015
  *
+ Grading Rubric
+
+ Your submission will be graded according to the following rubric.
+
+ Topic	Percentage	Requirement Description
+ Bézier Curves & Surfaces	40%	Track is closed (end point = start point), C0 continuous, & C1 continuous. (This doesn't need to be enforced in-program, as long as input control points specifiy C0 & C1 continuous curves.)
+
+ One Hero moves by arc-length parameterization and moves at a constant speed regardless of control point spacing. The other Hero moves by equal parameter steps.
+
+ Terrain is comprised of Bézier Surfaces. The Wandering Hero can be controlled and moves around the terrain properly.
+ 3D Drawing & Animation	5%	Heroes are animated & comprised of GLUT primitives / GLU quadrics. Scene is comprised of track and other scenic objects.
+ Cameras, Menus, Text, & Viewports	20%	Arcball camera follows Hero and rotates correctly; user can control rotation. Free camera is correctly implemented, can move around the scene, and is user-controllable. Camera is set up in Camera.h file. Camera from Hero's point of view works correctly; it is attached to the Hero and looks along the Hero's direction of movement.
+
+ First-person camera view is placed in a separate viewport. User can toggle between cameras through use of a menu attached to the right mouse button. User can toggle between Heroes to follow through menu as well.
+
+ Frames Per Second are rendered to screen. Hero name is displayed above Hero.
+ Lights & Materials	15%	Two different lights used along with two different materials. Used as described above with one light being dynamic in nature. Lights are defined in a Light.h file and Materials are defined in a Material.h file.
+ File I/O	5%	File format is documented in the README.txt file. A third-party should be able to write a World Scene in your format based on your documentation. File format supports two different types of objects that can be placed in the scene and objects are correctly placed and rendered in the scene. Two non-trivially different example files are included. Each example fully utilizes the file format (i.e. places objects of each type).
+ Submission, Presentation, & Guild Reflection	15%	Submission includes source code, Makefile, and README.txt.
+ Source code is well documented. Webpage named <HeroName>.html submitted and updated with screenshot from latest assignment. Submission compiles and executes in the lab machine environment. Presentation is of high quality and equal division of work is reported by team members.
  */
 
 // HEADERS /////////////////////////////////////////////////////////////////////
@@ -49,241 +69,13 @@ static size_t windowHeight = 480;
 static float aspectRatio;
 
 GLint leftMouseButton, rightMouseButton;    // status of the mouse buttons
-int wheelRotation = 0;
-int petWingRotation = 0;
 int mouseX = 0, mouseY = 0;                 // last known X and Y of the mouse
-
-float speed = 2;
-float carPositionX = 0, carPositionY = 0, carPositionZ = 0;
-float carTheta = 0, carPhi = 0;
-
-bool hideCage = false;
-bool hideBezierCurve = false;
 
 GLint menuId;				    // handle for our menu
 
 vector<Point> controlPoints;
 float trackPointVal = 0.0f;
 Camera camera;
-
-void drawBezierCurve();
-Point evaluateBezierCurve(Point p0, Point p1, Point p2, Point p3, float t);
-
-void drawPetWing() {
-	glPushMatrix();
-	glRotatef(petWingRotation, 1, 0, 0);
-	glColor3f(0, .5f, .5f);
-	glutSolidCone(.1f, .3f, 20, 20);
-	glPopMatrix();
-}
-
-void drawPetBody() {
-	glPushMatrix();
-	glColor3f(0, .5f, .5f);
-	glutSolidSphere(.1f, 50, 50);
-	glPopMatrix();
-}
-
-void drawPet() {
-	glPushMatrix();
-	
-	drawPetBody();
-
-	drawPetWing();
-
-	glPopMatrix();
-}
-
-//draw a simple green tree
-void drawTree() {
-	glPushMatrix();
-	glRotatef(-90, 1, 0, 0);
-	glColor3f(0, 1, 0);
-	glutSolidCone(2, 3, 20, 20);
-	glPopMatrix();
-}
-
-//draw a wheel, with a cross on it so animation can be seen
-void drawCarWheel() {
-	//create a sphere , then scale the x value so that the sphere looks more like a wheel
-	glPushMatrix();
-	glColor3f(1, 1, 1);
-	glScalef(.2f, 1, 1);
-	glutSolidSphere(1, 50, 50);
-	glPopMatrix();
-	//draw a beam going up the wheel 
-	glColor3f(.2f, .6f, 1);
-	glPushMatrix();
-	glTranslatef(.1f, 0, 0);
-	glScalef(.2f, 1, .2f);
-	glutSolidCube(1.25f);
-	glPopMatrix();
-	//draw a beam going across the wheel 
-	glColor3f(.2f, .6f, 1);
-	glPushMatrix();
-	glTranslatef(.1f, 0, 0);
-	glScalef(.2f, .2f, 1);
-	glutSolidCube(1.25f);
-	glPopMatrix();
-}
-
-//draw the body of the car
-void drawCarBody() {
-	//draw a cube, scale it to be more proportinal for the body of a car
-	glPushMatrix();
-	glColor3f(.2f, .6f, 1);
-	glScalef(2, .7f, 8);
-	glutSolidCube(1);
-	glPopMatrix();
-}
-
-//draw all the portions of the car
-void drawCar() {
-
-	glDisable(GL_LIGHTING);
-
-	glPushMatrix();
-	//translate the car to the updated position
-	glTranslatef(carPositionX, carPositionY, carPositionZ);
-	//rotate the car to the updated position
-	glRotatef(carTheta, 0, 1, 0);
-	//draw the body of the car, position it
-	glPushMatrix();
-	glTranslatef(0, 1, 0);
-	glPushMatrix();
-	//draw the bezier curve 
-	drawBezierCurve();
-	//draw the car
-	drawCarBody();
-	glPopMatrix();
-	//draw the wheels of the car, position them.
-	for (int i = 0; i < 4; i++) {
-		glPushMatrix();
-		//scale the first and second wheels to the other end of the car
-		if (i < 2) {
-			glScalef(1, 1, -1);
-		}
-		//for two of the wheels, scale them across the car
-		if (i % 2 == 0) {
-			glScalef(-1, 1, 1);
-		}
-		glTranslatef(1.2f, 1, 4);
-		//rotate the wheel according the the current angle, used to animate the wheels when they are moved.
-		if (i < 2) {
-			glRotatef(wheelRotation, 1, 0, 0);
-		}
-		else {
-			glRotatef(-wheelRotation, 1, 0, 0);
-		}
-		drawCarWheel();
-		glPopMatrix();
-	}
-	glPopMatrix();
-
-	glEnable(GL_LIGHTING);
-}
-
-// renderBezierCurve() //////////////////////////////////////////////////////////
-//
-// Responsible for drawing a Bezier Curve as defined by four control points.
-//  Breaks the curve into n segments as specified by the resolution. 
-//
-////////////////////////////////////////////////////////////////////////////////
-void renderBezierCurve(Point p0, Point p1, Point p2, Point p3, int resolution) {
-	// TODO #07: Draw a Bezier curve
-	for (int i = 0; i < resolution; i++) {
-		glPushMatrix();
-		int j = 0;
-		if (i + 1 < 4) {
-			j = i + 1;
-		}
-		else {
-			j = 0;
-		}
-		glColor3f(0, 0, 1);
-		glLineWidth(10.0f);
-		glBegin(GL_LINES);
-		Point point1 = evaluateBezierCurve(p0, p1, p2, p3, i);
-		glPushMatrix();
-		glTranslatef(point1.getX(), point1.getY(), point1.getZ());
-		drawPet();
-		petWingRotation++;
-		glPopMatrix();
-		glVertex3f(point1.getX(), point1.getY(), point1.getZ());
-		Point point2 = evaluateBezierCurve(p0, p1, p2, p3, j);
-		glVertex3f(point2.getX(), point2.getY(), point2.getZ());
-		glEnd();
-		glPopMatrix();
-		glLineWidth(1.0f);
-	}
-}
-
-void drawBezierCurve() {
-	glPushMatrix();
-	// TODO #05: Draw our control points
-	if (!hideCage) {
-		//iterate over each control point
-		for (int i = 0; i < controlPoints.size(); i++) {
-			//get the current point
-			Point p = controlPoints.at(i);
-			//push to the matrix
-			glPushMatrix();
-			//set the color to green	
-			glColor3f(0, 1, 0);
-			//translate to the control point origin
-			glTranslatef(p.getX(), p.getY(), p.getZ());
-			//create a glut solid sphere
-			glutSolidSphere(.3f, 50, 50);
-			//pop off the matrix
-			glPopMatrix();
-		}
-		// TODO #06: Connect our control points
-		for (int i = 0; i < controlPoints.size(); i++) {
-			glPushMatrix();
-			int j = 0;
-			if (i + 1 < controlPoints.size()) {
-				j = i + 1;
-			}
-			else {
-				j = 0;
-			}
-			glColor3f(1, 1, 0);
-			glLineWidth(3.0f);
-			glBegin(GL_LINES);
-			Point p1 = controlPoints.at(i);
-			glVertex3f(p1.getX(), p1.getY(), p1.getZ());
-			Point p2 = controlPoints.at(j);
-			glVertex3f(p2.getX(), p2.getY(), p2.getZ());
-			glEnd();
-			glPopMatrix();
-			glLineWidth(1.0f);
-		}
-	}
-	if (!hideBezierCurve) {
-		glPushMatrix();
-		// TODO #07: Draw the Bezier Curve!
-		//iterate over groups of 4 points in the curve
-		for (int i = 0; i < controlPoints.size(); i += 4) {
-			//get the points to render the curve along
-			int i1 = i + 1;
-			int i2 = i + 2;
-			int i3 = i + 3;
-			if (i1 >= controlPoints.size()) {
-				i1 = i1 % controlPoints.size();
-			}
-			if (i2 >= controlPoints.size()) {
-				i2 = i2 % controlPoints.size();
-			}
-			if (i3 >= controlPoints.size()) {
-				i3 = i3 % controlPoints.size();
-			}
-			//call the render method using the given points
-			renderBezierCurve(controlPoints.at(i), controlPoints.at(i1), controlPoints.at(i2), controlPoints.at(i3), 4);
-		}
-		glPushMatrix();
-	}
-	glPopMatrix();
-}
 
 // getRand() ///////////////////////////////////////////////////////////////////
 //
@@ -327,16 +119,6 @@ void drawGrid() {
 	*	must turn lighting back on.
 	*/
 	glEnable(GL_LIGHTING);
-}
-
-// evaluateBezierCurve() ////////////////////////////////////////////////////////
-//
-// Computes a location along a Bezier Curve. 
-//
-////////////////////////////////////////////////////////////////////////////////
-Point evaluateBezierCurve( Point p0, Point p1, Point p2, Point p3, float t ) {
-    // TODO #08: Compute a point along a Bezier curve
-    return Point(p0*t*t*t + p1*t*t + p2*t + p3);
 }
 
 // resizeWindow() //////////////////////////////////////////////////////////////
@@ -455,33 +237,7 @@ void renderScene(void) {
 	glLoadIdentity();
 	camera.lookAt();
 
-// 
-	glPushMatrix(); {
-		drawGrid();
-	}; glPopMatrix();
-	//draw the car
-	drawCar();
-
-	//draw tree 1
-	glPushMatrix();
-	glTranslatef(20, 0, 0);
-	drawTree();
-	glPopMatrix();
-	//draw tree 2
-	glPushMatrix();
-	glTranslatef(-20, 0, 0);
-	drawTree();
-	glPopMatrix();
-	//draw tree 3
-	glPushMatrix();
-	glTranslatef(0, 0, 20);
-	drawTree();
-	glPopMatrix();
-	//draw tree 4
-	glPushMatrix();
-	glTranslatef(0, 0, -20);
-	drawTree();
-	glPopMatrix();
+	drawGrid();
 
 	//push the back buffer to the screen
     glutSwapBuffers();
@@ -501,29 +257,17 @@ void normalKeysDown(unsigned char key, int x, int y) {
 	}
 	//if a key is pressed
 	if (key == 'a' || key == 'A' || key == 65 || key == 97) {
-		//set car heading to left
-		carTheta += 1;
 	}
 	//if s key is pressed
 	if (key == 's' || key == 'S' || key == 83 || key == 115) {
-		//move car in reverse
-		carPositionZ += 3 * cos(carTheta*3.14 / 180);
-		carPositionX += 3 * sin(carTheta*3.14 / 180);
-		wheelRotation -= 10.0f;
-		//move the camera backward
+		//move the camera forward 
 		camera.moveBackward();
 	}
 	//if d key is pressed
 	if (key == 'd' || key == 'D' || key == 68 || key == 100) {
-		//set car heading to the right
-		carTheta -= 1;
 	}
 	//if w key is pressed
 	if (key == 'w' || key == 'W' || key == 87 || key == 119) {
-		//move car forward
-		carPositionZ -= 3 * cos(carTheta*3.14 / 180);
-		carPositionX -= 3 * sin(carTheta*3.14 / 180);
-		wheelRotation += 10.0f;
 		//move the camera forward 
 		camera.moveForward();
 	}
@@ -551,12 +295,6 @@ void myMenu( int value ) {
 	// TODO #02: handle our menu options
 	if (value == 0) {
 		exit(0);
-	}
-	if (value == 1) {
-		hideCage = !hideCage;
-	}
-	if (value == 2) {
-		hideBezierCurve = !hideBezierCurve;
 	}
 }
 
