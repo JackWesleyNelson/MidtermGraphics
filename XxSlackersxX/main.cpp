@@ -72,7 +72,8 @@ GLint leftMouseButton, rightMouseButton;    // status of the mouse buttons
 int mouseX = 0, mouseY = 0;                 // last known X and Y of the mouse
 
 //Zilch's attributes
-float heroX = 0, heroZ = 0, heroTheta = 0, eyeTheta = 0, wheelTheta = 0;
+float heroX = 0, heroZ = 0, heroTheta = 0, eyeTheta = 0, limbTheta = 0;
+bool moving = false, limbUp = true;
 
 GLint menuId;				    // handle for our menu
 
@@ -139,7 +140,9 @@ void drawBody() {
 	
 	glColor3f( .1, .1, .1 );
 	glPushMatrix(); {									// Right Arm
-		glTranslatef( 0, -1.15, 1);
+		glTranslatef( 0, -.575, 1 );
+		glRotatef( -limbTheta, 0, 0, 1 );
+		glTranslatef( 0, -.575, 0 );
 		glScalef( .65, 1.75, .65);
 		glutSolidCube( 1 );
 		glScalef( 1, 1/1.75, 1);
@@ -150,13 +153,33 @@ void drawBody() {
 	
 	glColor3f( .1, .1, .1 );
 	glPushMatrix(); {									// Left Arm
-		glTranslatef( 0, -1.15, -1);
+		glTranslatef( 0, -.575, -1 );
+		glRotatef( limbTheta, 0, 0, 1 );
+		glTranslatef( 0, -.575, 0 );
 		glScalef( .65, 1.75, .65);
 		glutSolidCube( 1 );
 		glScalef( 1, 1/1.75, 1);
 		glTranslatef( 0, -.7, -.1);
 		glColor3f( 1, 1, 1 );
 		glutSolidCube( .6 );
+	}; glPopMatrix();
+	
+	glColor3f( .1, .1, .1 );							//Right Leg
+	glPushMatrix(); {
+		glTranslatef( 0, -1.5, .35);
+		glRotatef( limbTheta, 0, 0, 1 );
+		glTranslatef( 0, -1.5, 0 );
+		glScalef( .6, 2, .6 );
+		glutSolidCube( 1 );
+	}; glPopMatrix();
+	
+	glColor3f( .1, .1, .1 );							// Left Leg
+	glPushMatrix(); {
+		glTranslatef( 0, -1.5, -.35);
+		glRotatef( -limbTheta, 0, 0, 1 );
+		glTranslatef( 0, -1.5, 0 );
+		glScalef( .6, 2, .6 );
+		glutSolidCube( 1 );
 	}; glPopMatrix();
 }
 
@@ -195,7 +218,7 @@ void drawHead() {
 
 void drawZilch() {
 	glPushMatrix(); {
-		glTranslatef( heroX, 5, heroZ );				// X and Z position
+		glTranslatef( heroX, 4, heroZ );				// X and Z position
 		glRotatef(heroTheta, 0, 1, 0);					// Y axis rotation
 		
 		glPushMatrix(); {
@@ -207,6 +230,22 @@ void drawZilch() {
 		}; glPopMatrix();
 		
 	}; glPopMatrix();
+}
+
+// moveLimbs() /////////////////////////////////////////////////////////////////
+//
+//	Special function for moving Zilch legs and arms
+//
+////////////////////////////////////////////////////////////////////////////////
+void moveLimbs() {
+	if(limbUp)
+		limbTheta+=2;
+	else limbTheta-=2;
+	
+	if(limbTheta > 40)
+		limbUp = false;
+	if(limbTheta < -40)
+		limbUp = true;	
 }
 
 // resizeWindow() //////////////////////////////////////////////////////////////
@@ -332,6 +371,16 @@ void renderScene(void) {
     glutSwapBuffers();
 }
 
+// keyUp() ////////////////////////////////////////////////////////////
+//
+//  GLUT keyboard callback; gets called when the user releases a key.
+//
+////////////////////////////////////////////////////////////////////////////////
+void keyUp( unsigned char key, int mouseX, int mouseY ) {
+	if (key == 'd' || key == 'D' || key == 68 || key == 100) {
+		moving = false;
+	}
+}
 
 // normalKeysDown() ////////////////////////////////////////////////////////////
 //
@@ -354,6 +403,7 @@ void normalKeysDown(unsigned char key, int x, int y) {
 	}
 	//if d key is pressed
 	if (key == 'd' || key == 'D' || key == 68 || key == 100) {
+		moving = true;
 	}
 	//if w key is pressed
 	if (key == 'w' || key == 'W' || key == 87 || key == 119) {
@@ -373,6 +423,10 @@ void myTimer( int value ) {
 	eyeTheta++;
 	if( eyeTheta > 360 )
 		eyeTheta = 0;
+	if( moving ) {
+		moveLimbs();
+	}
+	else limbTheta = 0;
 	
     // redraw our display
     glutPostRedisplay();
@@ -416,6 +470,7 @@ void registerCallbacks() {
     // keyboard callbacks
     glutSetKeyRepeat(   GLUT_KEY_REPEAT_ON );
     glutKeyboardFunc(   normalKeysDown     );
+	glutKeyboardUpFunc(		keyUp		);
 
     // mouse callbacks
     glutMouseFunc(      mouseCallback      );
