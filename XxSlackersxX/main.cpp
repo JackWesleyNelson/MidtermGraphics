@@ -71,6 +71,8 @@ static float aspectRatio;
 GLint leftMouseButton, rightMouseButton;    // status of the mouse buttons
 int mouseX = 0, mouseY = 0;                 // last known X and Y of the mouse
 
+bool cameraF = false, cameraB = false;		//camera movement booleans
+
 //Zilch's attributes
 float heroX = 0, heroZ = 0, heroTheta = 0, eyeTheta = 0, limbTheta = 0;
 bool moving = false, limbUp = true;
@@ -216,10 +218,33 @@ void drawHead() {
 	
 }
 
+void drawName() {
+	glDisable(GL_LIGHTING);
+	// the text
+	char scrtext[64]= "Zilch";
+
+	// choose a colour
+	glColor3f( 0, 1, 0 );
+	glPushMatrix();
+	// where we want it written
+	glRotatef( 90, 0, 1, 0 );
+	glTranslatef( -1.35, 1.75, 0);
+	// how big we want it
+	glScalef( .01, .01, .01 );
+	for (int c=0; scrtext[c] != 0; ++c)
+	glutStrokeCharacter(GLUT_STROKE_ROMAN, scrtext[c]);
+	glPopMatrix();
+	glEnable(GL_LIGHTING);
+}
+
 void drawZilch() {
 	glPushMatrix(); {
 		glTranslatef( heroX, 4, heroZ );				// X and Z position
 		glRotatef(heroTheta, 0, 1, 0);					// Y axis rotation
+		
+		glPushMatrix(); {
+			drawName();									// Name above head
+		}; glPopMatrix();
 		
 		glPushMatrix(); {
 			drawHead();									// Hat, Face, and Head
@@ -365,6 +390,8 @@ void renderScene(void) {
 	camera.lookAt();
 
 	drawGrid();
+	
+	glScalef( .5, .5, .5 );
 	drawZilch();
 	
 	//push the back buffer to the screen
@@ -377,8 +404,20 @@ void renderScene(void) {
 //
 ////////////////////////////////////////////////////////////////////////////////
 void keyUp( unsigned char key, int mouseX, int mouseY ) {
+	//if a key is released
+	if (key == 'a' || key == 'A' || key == 65 || key == 97) {
+	}
+	//if s key is released
+	if (key == 's' || key == 'S' || key == 83 || key == 115) {
+		cameraB = false;
+	}
+	//if d key is released
 	if (key == 'd' || key == 'D' || key == 68 || key == 100) {
 		moving = false;
+	}
+	//if w key is released
+	if (key == 'w' || key == 'W' || key == 87 || key == 119) {
+		cameraF = false;
 	}
 }
 
@@ -398,8 +437,8 @@ void normalKeysDown(unsigned char key, int x, int y) {
 	}
 	//if s key is pressed
 	if (key == 's' || key == 'S' || key == 83 || key == 115) {
-		//move the camera forward 
-		camera.moveBackward();
+		//move the camera backward
+		cameraB = true;
 	}
 	//if d key is pressed
 	if (key == 'd' || key == 'D' || key == 68 || key == 100) {
@@ -408,7 +447,7 @@ void normalKeysDown(unsigned char key, int x, int y) {
 	//if w key is pressed
 	if (key == 'w' || key == 'W' || key == 87 || key == 119) {
 		//move the camera forward 
-		camera.moveForward();
+		cameraF = true;
 	}
 
 }
@@ -427,6 +466,12 @@ void myTimer( int value ) {
 		moveLimbs();
 	}
 	else limbTheta = 0;
+	
+	if(cameraF)
+		camera.moveForward();
+	
+	if(cameraB)
+		camera.moveBackward();
 	
     // redraw our display
     glutPostRedisplay();
@@ -563,8 +608,8 @@ int main( int argc, char **argv ) {
     fprintf(stdout, "[INFO]: |   OpenGL Renderer: %40s |\n", glGetString(GL_RENDERER));
     fprintf(stdout, "[INFO]: |   OpenGL Vendor:   %40s |\n", glGetString(GL_VENDOR));
     fprintf(stdout, "[INFO]: |   GLUI Version:    %40.2f |\n", GLUI_VERSION);
-    fprintf(stdout, "[INFO]: \\-------------------------------------------------------------/\n");
-
+    fprintf(stdout, "[INFO]: \\-------------------------------------------------------------/\n");	
+	
     // do some basic OpenGL setup
     initScene();
 
