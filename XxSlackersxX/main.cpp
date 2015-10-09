@@ -71,6 +71,9 @@ static float aspectRatio;
 GLint leftMouseButton, rightMouseButton;    // status of the mouse buttons
 int mouseX = 0, mouseY = 0;                 // last known X and Y of the mouse
 
+//Zilch's attributes
+float heroX = 0, heroZ = 0, heroTheta = 0, eyeTheta = 0, wheelTheta = 0;
+
 GLint menuId;				    // handle for our menu
 
 vector<Point> controlPoints;
@@ -119,6 +122,91 @@ void drawGrid() {
 	*	must turn lighting back on.
 	*/
 	glEnable(GL_LIGHTING);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
+//  Functions to draw Zilch avatar
+//
+////////////////////////////////////////////////////////////////////////////////
+void drawBody() {
+	glColor3f( .1, .1, .1 );							// Torso
+	glPushMatrix(); {
+		glTranslatef( 0, -1.15, 0);
+		glScalef( .75, .9, .80);
+		glutSolidCube( 2 );
+	}; glPopMatrix();
+	
+	glColor3f( .1, .1, .1 );
+	glPushMatrix(); {									// Right Arm
+		glTranslatef( 0, -1.15, 1);
+		glScalef( .65, 1.75, .65);
+		glutSolidCube( 1 );
+		glScalef( 1, 1/1.75, 1);
+		glTranslatef( 0, -.7, .1);
+		glColor3f( 1, 1, 1 );
+		glutSolidCube( .6 );
+	}; glPopMatrix();
+	
+	glColor3f( .1, .1, .1 );
+	glPushMatrix(); {									// Left Arm
+		glTranslatef( 0, -1.15, -1);
+		glScalef( .65, 1.75, .65);
+		glutSolidCube( 1 );
+		glScalef( 1, 1/1.75, 1);
+		glTranslatef( 0, -.7, -.1);
+		glColor3f( 1, 1, 1 );
+		glutSolidCube( .6 );
+	}; glPopMatrix();
+}
+
+void drawHead() {
+	glColor3f( 1, 1, 1 );
+	glutSolidCube( 1 );
+	
+	glColor3f( .1, .1, .1 );							// Hat Brim
+	glPushMatrix(); {
+		glTranslatef( 0, .55, 0);
+		glScalef( 1.35, .25, 1.35);
+		glutSolidCube( 1 );
+	}; glPopMatrix();
+	
+	glPushMatrix(); {									// Hat Top
+		glTranslatef( 0, .75, 0);
+		glScalef( .9, .75, .9);
+		glutSolidCube( 1 );
+	}; glPopMatrix();
+	
+	glColor3f( 1, 0, 0 );
+	glPushMatrix(); {									// Right Eye
+		glTranslatef( .5, .20, .25 );
+		glRotatef( -eyeTheta, 1, 0, 0 );
+		glutSolidCube( .25 );
+	}; glPopMatrix();
+	
+	glPushMatrix(); {									// Left Eye
+		glTranslatef( .5, .20, -.25 );
+		glRotatef( eyeTheta, 1, 0, 0 );
+		glutSolidCube( .25 );	
+	}; glPopMatrix();
+	
+	
+}
+
+void drawZilch() {
+	glPushMatrix(); {
+		glTranslatef( heroX, 5, heroZ );				// X and Z position
+		glRotatef(heroTheta, 0, 1, 0);					// Y axis rotation
+		
+		glPushMatrix(); {
+			drawHead();									// Hat, Face, and Head
+		}; glPopMatrix();
+		
+		glPushMatrix(); {
+			drawBody();
+		}; glPopMatrix();
+		
+	}; glPopMatrix();
 }
 
 // resizeWindow() //////////////////////////////////////////////////////////////
@@ -238,7 +326,8 @@ void renderScene(void) {
 	camera.lookAt();
 
 	drawGrid();
-
+	drawZilch();
+	
 	//push the back buffer to the screen
     glutSwapBuffers();
 }
@@ -280,6 +369,11 @@ void normalKeysDown(unsigned char key, int x, int y) {
 //
 ////////////////////////////////////////////////////////////////////////////////
 void myTimer( int value ) {
+	//Zilch Attributes
+	eyeTheta++;
+	if( eyeTheta > 360 )
+		eyeTheta = 0;
+	
     // redraw our display
     glutPostRedisplay();
     // register a new timer callback
@@ -405,7 +499,7 @@ int main( int argc, char **argv ) {
     glutInitDisplayMode( GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGB );
     glutInitWindowPosition( 50, 50 );
     glutInitWindowSize( windowWidth, windowHeight );
-    glutCreateWindow( "(A4) - How to Train Your Dragon" );
+    glutCreateWindow( "(MP) - Guild Wars" );
 
     fprintf(stdout, "[INFO]: /-------------------------------------------------------------\\\n");
     fprintf(stdout, "[INFO]: | OpenGL Information                                          |\n");
