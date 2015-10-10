@@ -79,6 +79,7 @@ bool freecamON = true, cameraF = false, cameraB = false;		//camera movement bool
 bool Zselect = true;							//character selection booleans 
 
 bool firstCam = false;
+float fpX, fpZ;
 
 //Zilch's attributes
 float heroX = 0, heroY = 2, heroZ = 0, heroTheta = 0, eyeTheta = 0, limbTheta = 0;
@@ -426,10 +427,13 @@ void renderScene2(void) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	// update the modelview matrix based on the camera's position
+	fpX = cosf(heroTheta*M_PI/180)+heroX;
+	fpZ = sinf(heroTheta*M_PI/180)+heroZ;
+	
 	glMatrixMode(GL_MODELVIEW);                           // make sure we aren't changing the projection matrix!
 	glLoadIdentity();
 	gluLookAt(heroX, heroY+2, heroZ,
-	5, 0, 5,
+	fpX, heroY+2, fpZ,
 	0, 1, 0);
 	
 	drawGrid();
