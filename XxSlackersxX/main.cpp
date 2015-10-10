@@ -552,11 +552,19 @@ void myTimer( int value ) {
 	if(characterR)
 		heroTheta ++;
 	
+	if(heroX < -50)
+		heroX = -50;
+	if(heroX > 50)
+		heroX = 50;
+	if(heroZ < -50)
+		heroZ = -50;
+	if(heroZ > 50)
+		heroZ = 50;
+	
+	
 	arcamera.shiftDir(heroX, heroY, heroZ);
 	arcamera.recomputeOrientation();
-	//if( freecamON )
-	//	camera.lookAt();
-	//else arcamera.lookAt(heroX, heroY, heroZ);
+	
     // redraw our display
     glutPostRedisplay();
 	glutSetWindow( winSub );
