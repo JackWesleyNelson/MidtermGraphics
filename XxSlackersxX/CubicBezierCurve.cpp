@@ -59,7 +59,9 @@ void CubicBezierCurve::draw(const int resolution) {
 }
 
 void CubicBezierCurve::loadPoints(const string& filename) {
-    ifstream file (filename, ifstream::in);
+    ifstream file;
+    file.open(filename);
+    
     string value;
     getline ( file, value, '\n' );
     
