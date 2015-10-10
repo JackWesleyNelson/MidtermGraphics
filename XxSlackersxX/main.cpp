@@ -69,12 +69,15 @@ static size_t windowWidth = 640;
 static size_t windowHeight = 480;
 static float aspectRatio;
 
+int winMain, winSub;						//Window declaration
+
 GLint leftMouseButton, rightMouseButton;    // status of the mouse buttons
 int mouseX = 0, mouseY = 0;                 // last known X and Y of the mouse
 
 bool freecamON = true, cameraF = false, cameraB = false;		//camera movement booleans
 bool Zselect = true;							//character selection booleans 
 
+bool firstCam = false;
 
 //Zilch's attributes
 float heroX = 0, heroY = 2, heroZ = 0, heroTheta = 0, eyeTheta = 0, limbTheta = 0;
@@ -551,7 +554,17 @@ void myMenu( int value ) {
 		freecamON = !freecamON;
 	}
 	if (value == 2) {
-		
+		firstCam = !firstCam;
+		if(firstCam) {
+			glutSetWindow( winSub );
+			glutShowWindow();
+			glutSetWindow( winMain );
+		}
+		else {
+			glutSetWindow( winSub );
+			glutHideWindow();
+			glutSetWindow( winMain );
+		}
 	}
 }
 
@@ -663,8 +676,12 @@ int main( int argc, char **argv ) {
     glutInitDisplayMode( GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGB );
     glutInitWindowPosition( 50, 50 );
     glutInitWindowSize( windowWidth, windowHeight );
-    glutCreateWindow( "(MP) - Guild Wars" );
-
+    winMain = glutCreateWindow( "(MP) - Guild Wars" );
+	winSub = glutCreateSubWindow(winMain, 0, 0, 200, 200);
+	glutHideWindow();
+	
+	glutSetWindow( winMain );
+	
     fprintf(stdout, "[INFO]: /-------------------------------------------------------------\\\n");
     fprintf(stdout, "[INFO]: | OpenGL Information                                          |\n");
     fprintf(stdout, "[INFO]: |-------------------------------------------------------------|\n");
