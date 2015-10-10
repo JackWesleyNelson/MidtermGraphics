@@ -10,8 +10,6 @@
 #include <GL/glu.h>
 #endif
 
-
-
 #include <math.h>
 
 #include "ARCamera.h"
