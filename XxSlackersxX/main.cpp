@@ -44,8 +44,6 @@
     #include <GL/glui.h>
 #endif
 
-
-
 // C Libraries we need
 #include <time.h>			// for time() to seed our RNG
 #include <stdio.h>			// allow to print to terminal
@@ -64,6 +62,7 @@ using namespace std;
 #include "Point.h"
 #include "Camera.h"
 #include "ARCamera.h"
+#include "Character.h"
 // GLOBAL VARIABLES ////////////////////////////////////////////////////////////
 
 static size_t windowWidth = 640;
@@ -80,15 +79,12 @@ bool Zselect = true;							//character selection booleans
 
 bool firstCam = false;
 
-//Zilch's attributes
-float heroX = 0, heroY = 2, heroZ = 0, heroTheta = 0, eyeTheta = 0, limbTheta = 0;
-bool moving = false, limbUp = true, characterL = false, characterR = false, characterF = false, characterB = false;
-
 GLint menuId;				    // handle for our menu
 
 vector<Point> controlPoints;
 float trackPointVal = 0.0f;
 Camera camera;
+Character character1;
 ARCamera arcamera;
 
 // getRand() ///////////////////////////////////////////////////////////////////
@@ -135,151 +131,6 @@ void drawGrid() {
 	glEnable(GL_LIGHTING);
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-//  Functions to draw Zilch avatar
-//
-////////////////////////////////////////////////////////////////////////////////
-void drawBody() {
-	glColor3f( .1, .1, .1 );							// Torso
-	glPushMatrix(); {
-		glTranslatef( 0, -1.15, 0);
-		glScalef( .75, .9, .80);
-		glutSolidCube( 2 );
-	}; glPopMatrix();
-	
-	glColor3f( .1, .1, .1 );
-	glPushMatrix(); {									// Right Arm
-		glTranslatef( 0, -.575, 1 );
-		glRotatef( -limbTheta, 0, 0, 1 );
-		glTranslatef( 0, -.575, 0 );
-		glScalef( .65, 1.75, .65);
-		glutSolidCube( 1 );
-		glScalef( 1, 1/1.75, 1);
-		glTranslatef( 0, -.7, .1);
-		glColor3f( 1, 1, 1 );
-		glutSolidCube( .6 );
-	}; glPopMatrix();
-	
-	glColor3f( .1, .1, .1 );
-	glPushMatrix(); {									// Left Arm
-		glTranslatef( 0, -.575, -1 );
-		glRotatef( limbTheta, 0, 0, 1 );
-		glTranslatef( 0, -.575, 0 );
-		glScalef( .65, 1.75, .65);
-		glutSolidCube( 1 );
-		glScalef( 1, 1/1.75, 1);
-		glTranslatef( 0, -.7, -.1);
-		glColor3f( 1, 1, 1 );
-		glutSolidCube( .6 );
-	}; glPopMatrix();
-	
-	glColor3f( .1, .1, .1 );							//Right Leg
-	glPushMatrix(); {
-		glTranslatef( 0, -1.5, .35);
-		glRotatef( limbTheta, 0, 0, 1 );
-		glTranslatef( 0, -1.5, 0 );
-		glScalef( .6, 2, .6 );
-		glutSolidCube( 1 );
-	}; glPopMatrix();
-	
-	glColor3f( .1, .1, .1 );							// Left Leg
-	glPushMatrix(); {
-		glTranslatef( 0, -1.5, -.35);
-		glRotatef( -limbTheta, 0, 0, 1 );
-		glTranslatef( 0, -1.5, 0 );
-		glScalef( .6, 2, .6 );
-		glutSolidCube( 1 );
-	}; glPopMatrix();
-}
-
-void drawHead() {
-	glColor3f( 1, 1, 1 );
-	glutSolidCube( 1 );
-	
-	glColor3f( .1, .1, .1 );							// Hat Brim
-	glPushMatrix(); {
-		glTranslatef( 0, .55, 0);
-		glScalef( 1.35, .25, 1.35);
-		glutSolidCube( 1 );
-	}; glPopMatrix();
-	
-	glPushMatrix(); {									// Hat Top
-		glTranslatef( 0, .75, 0);
-		glScalef( .9, .75, .9);
-		glutSolidCube( 1 );
-	}; glPopMatrix();
-	
-	glColor3f( 1, 0, 0 );
-	glPushMatrix(); {									// Right Eye
-		glTranslatef( .5, .20, .25 );
-		glRotatef( -eyeTheta, 1, 0, 0 );
-		glutSolidCube( .25 );
-	}; glPopMatrix();
-	
-	glPushMatrix(); {									// Left Eye
-		glTranslatef( .5, .20, -.25 );
-		glRotatef( eyeTheta, 1, 0, 0 );
-		glutSolidCube( .25 );	
-	}; glPopMatrix();
-	
-	
-}
-
-void drawName() {
-	glDisable(GL_LIGHTING);
-	// the text
-	char scrtext[64]= "Zilch";
-
-	// choose a colour
-	glColor3f( 0, 1, 0 );
-	glPushMatrix();
-	// where we want it written
-	glRotatef( 90, 0, 1, 0 );
-	glTranslatef( -1.35, 1.75, 0);
-	// how big we want it
-	glScalef( .01, .01, .01 );
-	for (int c=0; scrtext[c] != 0; ++c)
-	glutStrokeCharacter(GLUT_STROKE_ROMAN, scrtext[c]);
-	glPopMatrix();
-	glEnable(GL_LIGHTING);
-}
-
-void drawZilch() {
-	glPushMatrix(); {
-		glTranslatef( heroX, heroY, heroZ );				// X, Y and Z position
-		glRotatef(-heroTheta, 0, 1, 0);					// Y axis rotation
-		glScalef( .5, .5, .5 );
-		glPushMatrix(); {
-			drawName();									// Name above head
-		}; glPopMatrix();
-		
-		glPushMatrix(); {
-			drawHead();									// Hat, Face, and Head
-		}; glPopMatrix();
-		
-		glPushMatrix(); {
-			drawBody();
-		}; glPopMatrix();
-		
-	}; glPopMatrix();
-}
-
-// moveLimbs() /////////////////////////////////////////////////////////////////
-//
-//	Special function for moving Zilch legs and arms
-//
-////////////////////////////////////////////////////////////////////////////////
-void moveLimbs() {
-	if(limbUp)
-		limbTheta+=2;
-	else limbTheta-=2;
-	
-	if(limbTheta > 40)
-		limbUp = false;
-	if(limbTheta < -40)
-		limbUp = true;	
-}
 
 // resizeWindow() //////////////////////////////////////////////////////////////
 //
@@ -388,7 +239,9 @@ void initScene()  {
 	camera.setPhi(M_PI / 2.8f);
 	camera.recomputeOrientation();
 	
-	arcamera = ARCamera(heroX, heroY, heroZ);
+	character1 = Character(0, 0, 0);
+
+	arcamera = ARCamera(character1.getX(), character1.getY(), character1.getZ());
 	arcamera.setTheta(M_PI / 3.0f);
 	arcamera.setPhi(-M_PI / 2.8f);
 	arcamera.recomputeOrientation();
@@ -415,7 +268,7 @@ void renderScene(void) {
 	
 	drawGrid();
 	
-	drawZilch();
+	character1.draw();
 	
 	//push the back buffer to the screen
     glutSwapBuffers();
@@ -429,23 +282,23 @@ void renderScene(void) {
 void keyUp( unsigned char key, int mouseX, int mouseY ) {
 	//if a key is released
 	if (key == 'a' || key == 'A' || key == 65 || key == 97) {
-		characterL = false;
+		character1.setCharacterL(false);
 	}
 	//if s key is released
 	if (key == 's' || key == 'S' || key == 83 || key == 115) {
 		cameraB = false;
-		characterB = false;
-		moving = false;
+		character1.setCharacterB(false);
+		character1.setMoving(false);
 	}
 	//if d key is released
 	if (key == 'd' || key == 'D' || key == 68 || key == 100) {
-		characterR = false;
+		character1.setCharacterR(false);
 	}
 	//if w key is released
 	if (key == 'w' || key == 'W' || key == 87 || key == 119) {
 		cameraF = false;
-		characterF = false;
-		moving = false;
+		character1.setCharacterF(false);
+		character1.setMoving(false);
 	}
 }
 
@@ -463,7 +316,7 @@ void normalKeysDown(unsigned char key, int x, int y) {
 	//if a key is pressed
 	if (key == 'a' || key == 'A' || key == 65 || key == 97) {
 		if( !freecamON )
-			characterL = true;
+			character1.setCharacterL(true);
 	}
 	//if s key is pressed
 	if (key == 's' || key == 'S' || key == 83 || key == 115) {
@@ -471,22 +324,22 @@ void normalKeysDown(unsigned char key, int x, int y) {
 		if( freecamON )
 			cameraB = true;
 		else {
-			characterB = true;
-			moving = true;
+			character1.setCharacterB(true);
+			character1.setMoving(true);
 		}
 	}
 	//if d key is pressed
 	if (key == 'd' || key == 'D' || key == 68 || key == 100) {
 		if( !freecamON )
-			characterR = true;
+			character1.setCharacterR(true);
 	}
 	//if w key is pressed
 	if (key == 'w' || key == 'W' || key == 87 || key == 119) {
 		if( freecamON )
 			cameraF = true;
 		else {
-			characterF = true;
-			moving = true;
+			character1.setCharacterF(true);
+			character1.setMoving(true);
 		}
 	}
 
@@ -497,40 +350,22 @@ void normalKeysDown(unsigned char key, int x, int y) {
 //  GLUT timer callback; gets called when a timer expires
 //
 ////////////////////////////////////////////////////////////////////////////////
-void myTimer( int value ) {
-	//Zilch Attributes
-	float step = .25f;
-	eyeTheta++;
-	if( eyeTheta > 360 )
-		eyeTheta = 0;
-	if( moving ) {
-		moveLimbs();
-	}
-	else limbTheta = 0;
+void myTimer( int value ) {	
+	character1.incrementEyeTheta();
+	character1.positionLimbs();
 	
 	if(cameraF)
 		camera.moveForward();
 	
 	if(cameraB)
 		camera.moveBackward();
+	character1.moveForward();
+	character1.moveBackward();
+
+	character1.rotateLeft();
+	character1.rotateRight();
 	
-	if(characterF) {
-		heroX += step * cos(heroTheta*M_PI/180);
-		heroZ += step * sin(heroTheta*M_PI/180);
-	}
-	
-	if(characterB) {
-		heroX -= step * cos(heroTheta*M_PI/180);
-		heroZ -= step * sin(heroTheta*M_PI/180);
-	}
-	
-	if(characterL)
-		heroTheta --;
-	
-	if(characterR)
-		heroTheta ++;
-	
-	arcamera.shiftDir(heroX, heroY, heroZ);
+	arcamera.shiftDir(character1.getX(), character1.getY(), character1.getZ());
 	arcamera.recomputeOrientation();
 	//if( freecamON )
 	//	camera.lookAt();
