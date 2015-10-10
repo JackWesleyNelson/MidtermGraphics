@@ -3,13 +3,15 @@
 #include <GLUT/glut.h>
 #include <OpenGL/gl.h>
 #include <OpenGL/glu.h>
+#include <GLUI/glui.h>			// include our GLUI header
 #else					// else compiling on Linux OS
 #include <GL/glut.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
+#include <GL/glui.h>			// include our GLUI header
 #endif
 
-#include <GL/glui.h>			// include our GLUI header
+
 
 #include <math.h>
 
