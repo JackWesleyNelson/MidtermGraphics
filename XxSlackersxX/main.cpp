@@ -421,6 +421,24 @@ void renderScene(void) {
     glutSwapBuffers();
 }
 
+void renderScene2(void) {
+	glDrawBuffer(GL_BACK);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	// update the modelview matrix based on the camera's position
+	glMatrixMode(GL_MODELVIEW);                           // make sure we aren't changing the projection matrix!
+	glLoadIdentity();
+	gluLookAt(heroX, heroY+2, heroZ,
+	5, 0, 5,
+	0, 1, 0);
+	
+	drawGrid();
+	
+	drawZilch();
+	
+	glutSwapBuffers();
+}
+
 // keyUp() ////////////////////////////////////////////////////////////
 //
 //  GLUT keyboard callback; gets called when the user releases a key.
@@ -537,6 +555,9 @@ void myTimer( int value ) {
 	//else arcamera.lookAt(heroX, heroY, heroZ);
     // redraw our display
     glutPostRedisplay();
+	glutSetWindow( winSub );
+	glutPostRedisplay();
+	glutSetWindow( winMain );
     // register a new timer callback
     glutTimerFunc( 1000.0f / 60.0f, myTimer, 0 );
 }
@@ -678,10 +699,6 @@ int main( int argc, char **argv ) {
     glutInitWindowPosition( 50, 50 );
     glutInitWindowSize( windowWidth, windowHeight );
     winMain = glutCreateWindow( "(MP) - Guild Wars" );
-	winSub = glutCreateSubWindow(winMain, 0, 0, 200, 200);
-	glutHideWindow();
-	
-	glutSetWindow( winMain );
 	
     fprintf(stdout, "[INFO]: /-------------------------------------------------------------\\\n");
     fprintf(stdout, "[INFO]: | OpenGL Information                                          |\n");
@@ -700,7 +717,16 @@ int main( int argc, char **argv ) {
 
     // register callback functions...
     registerCallbacks();
-
+	
+	winSub = glutCreateSubWindow(winMain, 0, 0, 200, 200);
+	initScene();
+	registerCallbacks();
+	glutDisplayFunc(    renderScene2        );
+	
+	glutHideWindow();
+	
+	glutSetWindow( winMain );
+	
     // and enter the GLUT loop, never to exit.
     glutMainLoop();
 

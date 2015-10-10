@@ -1,5 +1,5 @@
 TARGET = MP
-OBJECTS = main.o Point.o Camera.o ARCamera.o CubicBezierCurve.o
+OBJECTS = main.o Point.o Camera.o ARCamera.o
 
 CXX    = g++
 CFLAGS = -Wall -g 
@@ -80,4 +80,3 @@ main.o: main.cpp Point.h
 Point.o: Point.cpp Point.h
 Camera.o: Camera.cpp Camera.h
 ARCamera.o: ARCamera.cpp ARCamera.h
-CubicBezierCurve.o: CubicBezierCurve.h CubicBezierCurve.cpp
