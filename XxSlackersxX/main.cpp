@@ -64,6 +64,7 @@ using namespace std;
 // Headers We've Written
 #include "Point.h"
 #include "Camera.h"
+#include "CubicBezierCurve.h"
 // GLOBAL VARIABLES ////////////////////////////////////////////////////////////
 
 static size_t windowWidth = 640;
@@ -78,6 +79,8 @@ GLint menuId;				    // handle for our menu
 vector<Point> controlPoints;
 float trackPointVal = 0.0f;
 Camera camera;
+CubicBezierCurve curve;
+
 
 // getRand() ///////////////////////////////////////////////////////////////////
 //
@@ -240,6 +243,8 @@ void renderScene(void) {
 	camera.lookAt();
 
 	drawGrid();
+    
+    curve.draw();
 
 	//push the back buffer to the screen
     glutSwapBuffers();
@@ -396,7 +401,7 @@ int main( int argc, char **argv ) {
     // TODO #03: make sure a control point CSV file was passed in.  Then read the points from file
 	//make sure on argument was passed in.
 	if (argc == 2) {
-		loadControlPoints(argv[1]);
+		curve.loadPoints(argv[1]);
 	}
 	else {
 		fprintf(stdout, "Please provide a csv file.\n");
