@@ -62,6 +62,7 @@ using namespace std;
 // Headers We've Written
 #include "Point.h"
 #include "Camera.h"
+#include "ARCamera.h"
 // GLOBAL VARIABLES ////////////////////////////////////////////////////////////
 
 static size_t windowWidth = 640;
@@ -71,17 +72,20 @@ static float aspectRatio;
 GLint leftMouseButton, rightMouseButton;    // status of the mouse buttons
 int mouseX = 0, mouseY = 0;                 // last known X and Y of the mouse
 
-bool cameraF = false, cameraB = false;		//camera movement booleans
+bool freecamON = true, cameraF = false, cameraB = false;		//camera movement booleans
+bool Zselect = true;							//character selection booleans 
+
 
 //Zilch's attributes
-float heroX = 0, heroZ = 0, heroTheta = 0, eyeTheta = 0, limbTheta = 0;
-bool moving = false, limbUp = true;
+float heroX = 0, heroY = 2, heroZ = 0, heroTheta = 0, eyeTheta = 0, limbTheta = 0;
+bool moving = false, limbUp = true, characterL = false, characterR = false, characterF = false, characterB = false;
 
 GLint menuId;				    // handle for our menu
 
 vector<Point> controlPoints;
 float trackPointVal = 0.0f;
 Camera camera;
+ARCamera arcamera;
 
 // getRand() ///////////////////////////////////////////////////////////////////
 //
@@ -239,9 +243,9 @@ void drawName() {
 
 void drawZilch() {
 	glPushMatrix(); {
-		glTranslatef( heroX, 4, heroZ );				// X and Z position
-		glRotatef(heroTheta, 0, 1, 0);					// Y axis rotation
-		
+		glTranslatef( heroX, heroY, heroZ );				// X, Y and Z position
+		glRotatef(-heroTheta, 0, 1, 0);					// Y axis rotation
+		glScalef( .5, .5, .5 );
 		glPushMatrix(); {
 			drawName();									// Name above head
 		}; glPopMatrix();
@@ -322,11 +326,20 @@ void mouseCallback(int button, int state, int thisX, int thisY) {
 //
 ////////////////////////////////////////////////////////////////////////////////
 void mouseMotion(int x, int y) {
-    if(leftMouseButton == GLUT_DOWN) {
+    if(leftMouseButton == GLUT_DOWN && freecamON) {
 		camera.updateCameraRotation(x - mouseX, mouseY - y);
         camera.recomputeOrientation();     //update camera (x,y,z) based on (radius,theta,phi)
     }
-
+	
+	if(!freecamON && leftMouseButton == GLUT_DOWN && glutGetModifiers() == GLUT_ACTIVE_CTRL) {
+		arcamera.setRadius((mouseY - y)*.05);
+	}
+    else if(!freecamON && leftMouseButton == GLUT_DOWN) {		// for the camera rotate
+        arcamera.setTheta((mouseX - x)*.005);
+		arcamera.setPhi((mouseY - y)*.005);
+		arcamera.recomputeOrientation();
+	}
+	
     mouseX = x;
     mouseY = y;
 }
@@ -370,6 +383,11 @@ void initScene()  {
 	camera.setTheta(-M_PI / 3.0f);
 	camera.setPhi(M_PI / 2.8f);
 	camera.recomputeOrientation();
+	
+	arcamera = ARCamera(heroX, heroY, heroZ);
+	arcamera.setTheta(M_PI / 3.0f);
+	arcamera.setPhi(-M_PI / 2.8f);
+	arcamera.recomputeOrientation();
 }
 
 // renderScene() ///////////////////////////////////////////////////////////////
@@ -387,11 +405,12 @@ void renderScene(void) {
 	// update the modelview matrix based on the camera's position
 	glMatrixMode(GL_MODELVIEW);                           // make sure we aren't changing the projection matrix!
 	glLoadIdentity();
-	camera.lookAt();
-
+	if( freecamON )
+		camera.lookAt();
+	else arcamera.lookAt();
+	
 	drawGrid();
 	
-	glScalef( .5, .5, .5 );
 	drawZilch();
 	
 	//push the back buffer to the screen
@@ -406,18 +425,23 @@ void renderScene(void) {
 void keyUp( unsigned char key, int mouseX, int mouseY ) {
 	//if a key is released
 	if (key == 'a' || key == 'A' || key == 65 || key == 97) {
+		characterL = false;
 	}
 	//if s key is released
 	if (key == 's' || key == 'S' || key == 83 || key == 115) {
 		cameraB = false;
+		characterB = false;
+		moving = false;
 	}
 	//if d key is released
 	if (key == 'd' || key == 'D' || key == 68 || key == 100) {
-		moving = false;
+		characterR = false;
 	}
 	//if w key is released
 	if (key == 'w' || key == 'W' || key == 87 || key == 119) {
 		cameraF = false;
+		characterF = false;
+		moving = false;
 	}
 }
 
@@ -434,20 +458,32 @@ void normalKeysDown(unsigned char key, int x, int y) {
 	}
 	//if a key is pressed
 	if (key == 'a' || key == 'A' || key == 65 || key == 97) {
+		if( !freecamON )
+			characterL = true;
 	}
 	//if s key is pressed
 	if (key == 's' || key == 'S' || key == 83 || key == 115) {
 		//move the camera backward
-		cameraB = true;
+		if( freecamON )
+			cameraB = true;
+		else {
+			characterB = true;
+			moving = true;
+		}
 	}
 	//if d key is pressed
 	if (key == 'd' || key == 'D' || key == 68 || key == 100) {
-		moving = true;
+		if( !freecamON )
+			characterR = true;
 	}
 	//if w key is pressed
 	if (key == 'w' || key == 'W' || key == 87 || key == 119) {
-		//move the camera forward 
-		cameraF = true;
+		if( freecamON )
+			cameraF = true;
+		else {
+			characterF = true;
+			moving = true;
+		}
 	}
 
 }
@@ -459,6 +495,7 @@ void normalKeysDown(unsigned char key, int x, int y) {
 ////////////////////////////////////////////////////////////////////////////////
 void myTimer( int value ) {
 	//Zilch Attributes
+	float step = .25f;
 	eyeTheta++;
 	if( eyeTheta > 360 )
 		eyeTheta = 0;
@@ -473,6 +510,27 @@ void myTimer( int value ) {
 	if(cameraB)
 		camera.moveBackward();
 	
+	if(characterF) {
+		heroX += step * cos(heroTheta*M_PI/180);
+		heroZ += step * sin(heroTheta*M_PI/180);
+	}
+	
+	if(characterB) {
+		heroX -= step * cos(heroTheta*M_PI/180);
+		heroZ -= step * sin(heroTheta*M_PI/180);
+	}
+	
+	if(characterL)
+		heroTheta --;
+	
+	if(characterR)
+		heroTheta ++;
+	
+	arcamera.shiftDir(heroX, heroY, heroZ);
+	arcamera.recomputeOrientation();
+	//if( freecamON )
+	//	camera.lookAt();
+	//else arcamera.lookAt(heroX, heroY, heroZ);
     // redraw our display
     glutPostRedisplay();
     // register a new timer callback
@@ -489,6 +547,12 @@ void myMenu( int value ) {
 	if (value == 0) {
 		exit(0);
 	}
+	if (value == 1) {
+		freecamON = !freecamON;
+	}
+	if (value == 2) {
+		
+	}
 }
 
 // createMenus() ///////////////////////////////////////////////////////////////
@@ -501,8 +565,8 @@ void createMenus() {
 	// TODO #01: Create a Simple Menu
 	menuId = glutCreateMenu(myMenu);
 	glutAddMenuEntry("Quit", 0);
-	glutAddMenuEntry("Display/Hide Control Cage", 1);
-	glutAddMenuEntry("Display/Hide Bezier Curve", 2);
+	glutAddMenuEntry("FreeCam ON/OFF", 1);
+	glutAddMenuEntry("Zilch", 2);
 	glutAttachMenu(GLUT_RIGHT_BUTTON);
 }
 

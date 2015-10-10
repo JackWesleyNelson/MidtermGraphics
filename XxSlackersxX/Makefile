@@ -1,5 +1,5 @@
 TARGET = MP
-OBJECTS = main.o Point.o Camera.o
+OBJECTS = main.o Point.o Camera.o ARCamera.o
 
 CXX    = g++
 CFLAGS = -Wall -g 
@@ -79,3 +79,4 @@ $(TARGET): $(OBJECTS)
 main.o: main.cpp Point.h
 Point.o: Point.cpp Point.h
 Camera.o: Camera.cpp Camera.h
+ARCamera.o: ARCamera.cpp ARCamera.h
