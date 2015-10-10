@@ -22,10 +22,6 @@ CubicBezierCurve::CubicBezierCurve() {
     
 }
 
-CubicBezierCurve::CubicBezierCurve(const std::string& filename) {
-    loadPoints(filename);
-}
-
 void CubicBezierCurve::draw(const int resolution) {
     glColor3f(0,1,0);
     for(int i =0; i < controlPoints.size(); i++) {
@@ -55,28 +51,6 @@ void CubicBezierCurve::draw(const int resolution) {
     
     for(int i = 0; i < controlPoints.size() - 2; i += 3) {
         render(controlPoints[i], controlPoints[i+1], controlPoints[i+2], controlPoints[i+3], resolution);
-    }
-}
-
-void CubicBezierCurve::loadPoints(const string& filename) {
-    ifstream file;
-    file.open(filename);
-    
-    string value;
-    getline ( file, value, '\n' );
-    
-    int numPoints = atoi(value.c_str());
-    
-    
-    for(int i=0; i < numPoints; i++) {
-        string x, y, z;
-        getline ( file, x, ',' );
-        getline ( file, y, ',' );
-        getline ( file, z, '\n' );
-        int a = atoi( x.c_str());
-        int b = atoi( y.c_str());
-        int c = atoi( z.c_str());
-        controlPoints.push_back(Point( a, b, c ));
     }
 }
 
