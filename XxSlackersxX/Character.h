@@ -30,10 +30,14 @@ public:
 	void setCharacterR(bool state);
 	void setCharacterF(bool state);
 	void setCharacterB(bool state);
-
+	void setTheta(float angle);
+	void setX(float x);
+	void setZ(float z);
+	
 	float getX();
 	float getY();
 	float getZ();
+	float getTheta();
 
 
 private:

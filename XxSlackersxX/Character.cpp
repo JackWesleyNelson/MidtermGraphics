@@ -255,6 +255,21 @@ void Character::setCharacterB(bool state)
 	characterB = state;
 }
 
+void Character::setTheta(float angle)
+{
+	heroTheta = angle;
+}
+
+void Character::setX(float x)
+{
+	heroX = x;
+}
+
+void Character::setZ(float z)
+{
+	heroZ = z;
+}
+
 float Character::getX()
 {
 	return heroX;
@@ -268,6 +283,11 @@ float Character::getY()
 float Character::getZ()
 {
 	return heroZ;
+}
+
+float Character::getTheta()
+{
+	return heroTheta;
 }
 
 Character::Character()

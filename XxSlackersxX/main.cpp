@@ -280,18 +280,18 @@ void renderScene2(void) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	// update the modelview matrix based on the camera's position
-	fpX = cosf(heroTheta*M_PI/180)+heroX;
-	fpZ = sinf(heroTheta*M_PI/180)+heroZ;
+	fpX = cosf(character1.getTheta()*M_PI/180)+character1.getX();
+	fpZ = sinf(character1.getTheta()*M_PI/180)+character1.getZ();
 	
 	glMatrixMode(GL_MODELVIEW);                           // make sure we aren't changing the projection matrix!
 	glLoadIdentity();
-	gluLookAt(heroX, heroY+2, heroZ,
-	fpX, heroY+2, fpZ,
+	gluLookAt(character1.getX(), character1.getY()+2, character1.getZ(),
+	fpX, character1.getY()+2, fpZ,
 	0, 1, 0);
 	
 	drawGrid();
 	
-	drawZilch();
+	character1.draw();
 	
 	glutSwapBuffers();
 }
@@ -387,37 +387,19 @@ void myTimer( int value ) {
 	character1.rotateLeft();
 	character1.rotateRight();
 	
-<<<<<<< HEAD
+
 	arcamera.shiftDir(character1.getX(), character1.getY(), character1.getZ());
-=======
-	if(characterF) {
-		heroX += step * cos(heroTheta*M_PI/180);
-		heroZ += step * sin(heroTheta*M_PI/180);
-	}
 	
-	if(characterB) {
-		heroX -= step * cos(heroTheta*M_PI/180);
-		heroZ -= step * sin(heroTheta*M_PI/180);
-	}
+	if(character1.getX() < -50)
+		character1.setX(-50);
+	if(character1.getX() > 50)
+		character1.setX(50);
+	if(character1.getZ() < -50)
+		character1.setZ(-50);
+	if(character1.getZ() > 50)
+		character1.setZ(50);
 	
-	if(characterL)
-		heroTheta --;
-	
-	if(characterR)
-		heroTheta ++;
-	
-	if(heroX < -50)
-		heroX = -50;
-	if(heroX > 50)
-		heroX = 50;
-	if(heroZ < -50)
-		heroZ = -50;
-	if(heroZ > 50)
-		heroZ = 50;
-	
-	
-	arcamera.shiftDir(heroX, heroY, heroZ);
->>>>>>> 3e3c7b9deac01094a01613fe8769039ea0de7cc3
+
 	arcamera.recomputeOrientation();
 	
     // redraw our display
