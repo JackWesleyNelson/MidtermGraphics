@@ -35,6 +35,7 @@ public:
 	void setZ(float z);
 	void setColor(float r, float g, float b);
 	void setName(char* n);
+	char* getName();
 	
 	float getX();
 	float getY();

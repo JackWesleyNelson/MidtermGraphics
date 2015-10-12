@@ -302,6 +302,10 @@ float Character::getTheta()
 	return heroTheta;
 }
 
+char* Character::getName() {
+	return name;
+}
+
 Character::Character()
 {
 	heroX = 0;

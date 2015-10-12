@@ -85,7 +85,9 @@ GLint menuId;				    // handle for our menu
 vector<Point> controlPoints;
 float trackPointVal = 0.0f;
 Camera camera;
-Character character1, character2, character3;
+Character chars[3];
+int charIt = 0;
+//Character character1, character2, character3;
 ARCamera arcamera;
 
 // getRand() ///////////////////////////////////////////////////////////////////
@@ -240,15 +242,15 @@ void initScene()  {
 	camera.setPhi(M_PI / 2.8f);
 	camera.recomputeOrientation();
 	
-	character1 = Character(0, 0, 0);
-	character2 = Character(5, 0, 5);
-	character2.setColor( .3, .3, 1);
-	character2.setName("Thing 1");
-	character3 = Character(10, 0,10);
-	character3.setColor( 1, .3, .3);
-	character3.setName("Thing 2");
+	chars[0] = Character(0, 0, 0);
+	chars[1] = Character(5, 0, 5);
+	chars[1].setColor( .3, .3, 1);
+	chars[1].setName("Thing 1");
+	chars[2] = Character(10, 0,10);
+	chars[2].setColor( 1, .3, .3);
+	chars[2].setName("Thing 2");
 	
-	arcamera = ARCamera(character1.getX(), character1.getY(), character1.getZ());
+	arcamera = ARCamera(chars[charIt].getX(), chars[charIt].getY(), chars[charIt].getZ());
 	arcamera.setTheta(M_PI / 3.0f);
 	arcamera.setPhi(-M_PI / 2.8f);
 	arcamera.recomputeOrientation();
@@ -275,9 +277,8 @@ void renderScene(void) {
 	
 	drawGrid();
 	
-	character1.draw();
-	character2.draw();
-	character3.draw();
+	for(int i=0;i<3;i++)
+		chars[i].draw();
 	
 	//push the back buffer to the screen
     glutSwapBuffers();
@@ -288,20 +289,19 @@ void renderScene2(void) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	// update the modelview matrix based on the camera's position
-	fpX = cosf(character1.getTheta()*M_PI/180)+character1.getX();
-	fpZ = sinf(character1.getTheta()*M_PI/180)+character1.getZ();
+	fpX = cosf(chars[charIt].getTheta()*M_PI/180)+chars[charIt].getX();
+	fpZ = sinf(chars[charIt].getTheta()*M_PI/180)+chars[charIt].getZ();
 	
 	glMatrixMode(GL_MODELVIEW);                           // make sure we aren't changing the projection matrix!
 	glLoadIdentity();
-	gluLookAt(character1.getX(), character1.getY()+.7, character1.getZ(),
-	fpX, character1.getY()+.6, fpZ,
+	gluLookAt(chars[charIt].getX(), chars[charIt].getY()+.7, chars[charIt].getZ(),
+	fpX, chars[charIt].getY()+.6, fpZ,
 	0, 1, 0);
 	
 	drawGrid();
 	
-	character1.draw();
-	character2.draw();
-	character3.draw();
+	for(int i=0;i<3;i++)
+		chars[i].draw();
 	
 	glutSwapBuffers();
 }
@@ -314,23 +314,23 @@ void renderScene2(void) {
 void keyUp( unsigned char key, int mouseX, int mouseY ) {
 	//if a key is released
 	if (key == 'a' || key == 'A' || key == 65 || key == 97) {
-		character1.setCharacterL(false);
+		chars[charIt].setCharacterL(false);
 	}
 	//if s key is released
 	if (key == 's' || key == 'S' || key == 83 || key == 115) {
 		cameraB = false;
-		character1.setCharacterB(false);
-		character1.setMoving(false);
+		chars[0].setCharacterB(false);
+		chars[0].setMoving(false);
 	}
 	//if d key is released
 	if (key == 'd' || key == 'D' || key == 68 || key == 100) {
-		character1.setCharacterR(false);
+		chars[0].setCharacterR(false);
 	}
 	//if w key is released
 	if (key == 'w' || key == 'W' || key == 87 || key == 119) {
 		cameraF = false;
-		character1.setCharacterF(false);
-		character1.setMoving(false);
+		chars[0].setCharacterF(false);
+		chars[0].setMoving(false);
 	}
 }
 
@@ -348,7 +348,7 @@ void normalKeysDown(unsigned char key, int x, int y) {
 	//if a key is pressed
 	if (key == 'a' || key == 'A' || key == 65 || key == 97) {
 		if( !freecamON )
-			character1.setCharacterL(true);
+			chars[0].setCharacterL(true);
 	}
 	//if s key is pressed
 	if (key == 's' || key == 'S' || key == 83 || key == 115) {
@@ -356,22 +356,22 @@ void normalKeysDown(unsigned char key, int x, int y) {
 		if( freecamON )
 			cameraB = true;
 		else {
-			character1.setCharacterB(true);
-			character1.setMoving(true);
+			chars[0].setCharacterB(true);
+			chars[0].setMoving(true);
 		}
 	}
 	//if d key is pressed
 	if (key == 'd' || key == 'D' || key == 68 || key == 100) {
 		if( !freecamON )
-			character1.setCharacterR(true);
+			chars[0].setCharacterR(true);
 	}
 	//if w key is pressed
 	if (key == 'w' || key == 'W' || key == 87 || key == 119) {
 		if( freecamON )
 			cameraF = true;
 		else {
-			character1.setCharacterF(true);
-			character1.setMoving(true);
+			chars[0].setCharacterF(true);
+			chars[0].setMoving(true);
 		}
 	}
 
@@ -382,32 +382,34 @@ void normalKeysDown(unsigned char key, int x, int y) {
 //  GLUT timer callback; gets called when a timer expires
 //
 ////////////////////////////////////////////////////////////////////////////////
-void myTimer( int value ) {	
-	character1.incrementEyeTheta();
-	character1.positionLimbs();
+void myTimer( int value ) {
+	for(int i=0;i<3;i++) 
+		chars[i].incrementEyeTheta();
+	chars[0].positionLimbs();
 	
 	if(cameraF)
 		camera.moveForward();
 	
 	if(cameraB)
 		camera.moveBackward();
-	character1.moveForward();
-	character1.moveBackward();
+	
+	chars[0].moveForward();
+	chars[0].moveBackward();
 
-	character1.rotateLeft();
-	character1.rotateRight();
+	chars[0].rotateLeft();
+	chars[0].rotateRight();
 	
 
-	arcamera.shiftDir(character1.getX(), character1.getY(), character1.getZ());
+	arcamera.shiftDir(chars[charIt].getX(), chars[charIt].getY(), chars[charIt].getZ());
 	
-	if(character1.getX() < -50)
-		character1.setX(-50);
-	if(character1.getX() > 50)
-		character1.setX(50);
-	if(character1.getZ() < -50)
-		character1.setZ(-50);
-	if(character1.getZ() > 50)
-		character1.setZ(50);
+	if(chars[0].getX() < -50)
+		chars[0].setX(-50);
+	if(chars[0].getX() > 50)
+		chars[0].setX(50);
+	if(chars[0].getZ() < -50)
+		chars[0].setZ(-50);
+	if(chars[0].getZ() > 50)
+		chars[0].setZ(50);
 	
 
 	arcamera.recomputeOrientation();
@@ -449,6 +451,11 @@ void myMenu( int value ) {
 	}
 }
 
+void mySubMenu( int value ) {
+	charIt = value;
+	freecamON = false;
+}
+
 // createMenus() ///////////////////////////////////////////////////////////////
 //
 //  Handles creating a menu, adding menu entries, and attaching the menu to
@@ -456,11 +463,14 @@ void myMenu( int value ) {
 //
 ////////////////////////////////////////////////////////////////////////////////
 void createMenus() {
-	// TODO #01: Create a Simple Menu
-	menuId = glutCreateMenu(myMenu);
+	int subMenuID = glutCreateMenu(mySubMenu);
+	for(int i=0;i<3;i++)
+		glutAddMenuEntry(chars[i].getName(), i);
+	
+	int menuId = glutCreateMenu(myMenu);
 	glutAddMenuEntry("Quit", 0);
 	glutAddMenuEntry("FreeCam ON/OFF", 1);
-	glutAddMenuEntry("Zilch", 2);
+	glutAddSubMenu("Arcball Focus", subMenuID);
 	glutAttachMenu(GLUT_RIGHT_BUTTON);
 }
 
