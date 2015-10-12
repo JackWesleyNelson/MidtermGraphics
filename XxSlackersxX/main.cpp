@@ -86,7 +86,7 @@ vector<Point> controlPoints;
 float trackPointVal = 0.0f;
 Camera camera;
 Character chars[3];
-int charIt = 0;
+int charIt = 0, charIt2 = 0;
 //Character character1, character2, character3;
 ARCamera arcamera;
 
@@ -289,13 +289,13 @@ void renderScene2(void) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	// update the modelview matrix based on the camera's position
-	fpX = cosf(chars[charIt].getTheta()*M_PI/180)+chars[charIt].getX();
-	fpZ = sinf(chars[charIt].getTheta()*M_PI/180)+chars[charIt].getZ();
+	fpX = cosf(chars[charIt2].getTheta()*M_PI/180)+chars[charIt2].getX();
+	fpZ = sinf(chars[charIt2].getTheta()*M_PI/180)+chars[charIt2].getZ();
 	
 	glMatrixMode(GL_MODELVIEW);                           // make sure we aren't changing the projection matrix!
 	glLoadIdentity();
-	gluLookAt(chars[charIt].getX(), chars[charIt].getY()+.7, chars[charIt].getZ(),
-	fpX, chars[charIt].getY()+.6, fpZ,
+	gluLookAt(chars[charIt2].getX(), chars[charIt2].getY()+.7, chars[charIt2].getZ(),
+	fpX, chars[charIt2].getY()+.6, fpZ,
 	0, 1, 0);
 	
 	drawGrid();
@@ -314,7 +314,7 @@ void renderScene2(void) {
 void keyUp( unsigned char key, int mouseX, int mouseY ) {
 	//if a key is released
 	if (key == 'a' || key == 'A' || key == 65 || key == 97) {
-		chars[charIt].setCharacterL(false);
+		chars[0].setCharacterL(false);
 	}
 	//if s key is released
 	if (key == 's' || key == 'S' || key == 83 || key == 115) {
@@ -434,26 +434,36 @@ void myMenu( int value ) {
 		exit(0);
 	}
 	if (value == 1) {
-		freecamON = !freecamON;
+		freecamON = true;
 	}
-	if (value == 2) {
+	if(value == 2) {
 		firstCam = !firstCam;
-		if(firstCam) {
-			glutSetWindow( winSub );
-			glutShowWindow();
-			glutSetWindow( winMain );
-		}
-		else {
-			glutSetWindow( winSub );
-			glutHideWindow();
-			glutSetWindow( winMain );
-		}
+	}
+		
+	if(firstCam) {
+		glutSetWindow( winSub );
+		glutShowWindow();
+		glutSetWindow( winMain );
+	}
+	else {
+		glutSetWindow( winSub );
+		glutHideWindow();
+		glutSetWindow( winMain );
 	}
 }
 
-void mySubMenu( int value ) {
+void mySubMenu1( int value ) {
 	charIt = value;
 	freecamON = false;
+}
+
+void mySubMenu2( int value ) {
+	firstCam = true;
+	charIt2 = value;
+	
+	glutSetWindow( winSub );
+	glutShowWindow();
+	glutSetWindow( winMain );
 }
 
 // createMenus() ///////////////////////////////////////////////////////////////
@@ -463,14 +473,20 @@ void mySubMenu( int value ) {
 //
 ////////////////////////////////////////////////////////////////////////////////
 void createMenus() {
-	int subMenuID = glutCreateMenu(mySubMenu);
+	int subMenuID = glutCreateMenu(mySubMenu1);
+	for(int i=0;i<3;i++)
+		glutAddMenuEntry(chars[i].getName(), i);
+	
+	int subMenuID2 = glutCreateMenu(mySubMenu2);
 	for(int i=0;i<3;i++)
 		glutAddMenuEntry(chars[i].getName(), i);
 	
 	int menuId = glutCreateMenu(myMenu);
 	glutAddMenuEntry("Quit", 0);
-	glutAddMenuEntry("FreeCam ON/OFF", 1);
+	glutAddMenuEntry("FreeCam", 1);
 	glutAddSubMenu("Arcball Focus", subMenuID);
+	glutAddMenuEntry("First Person Cam ON/OFF", 2);
+	glutAddSubMenu("First Person Focus", subMenuID2);
 	glutAttachMenu(GLUT_RIGHT_BUTTON);
 }
 
