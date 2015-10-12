@@ -33,6 +33,8 @@ public:
 	void setTheta(float angle);
 	void setX(float x);
 	void setZ(float z);
+	void setColor(float r, float g, float b);
+	void setName(char* n);
 	
 	float getX();
 	float getY();
@@ -42,8 +44,9 @@ public:
 
 private:
 	//Zilch's attributes
-	float heroX, heroY, heroZ, heroTheta, eyeTheta, limbTheta, step;
+	float heroX, heroY, heroZ, heroTheta, eyeTheta, limbTheta, step, red, green, blue;
 	bool moving, limbUp, characterL, characterR, characterF, characterB;
+	char* name;
 
 	void drawBody();
 	void drawHead();

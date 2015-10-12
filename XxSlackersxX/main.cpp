@@ -85,7 +85,7 @@ GLint menuId;				    // handle for our menu
 vector<Point> controlPoints;
 float trackPointVal = 0.0f;
 Camera camera;
-Character character1;
+Character character1, character2, character3;
 ARCamera arcamera;
 
 // getRand() ///////////////////////////////////////////////////////////////////
@@ -241,7 +241,13 @@ void initScene()  {
 	camera.recomputeOrientation();
 	
 	character1 = Character(0, 0, 0);
-
+	character2 = Character(5, 0, 5);
+	character2.setColor( .3, .3, 1);
+	character2.setName("Thing 1");
+	character3 = Character(10, 0,10);
+	character3.setColor( 1, .3, .3);
+	character3.setName("Thing 2");
+	
 	arcamera = ARCamera(character1.getX(), character1.getY(), character1.getZ());
 	arcamera.setTheta(M_PI / 3.0f);
 	arcamera.setPhi(-M_PI / 2.8f);
@@ -270,6 +276,8 @@ void renderScene(void) {
 	drawGrid();
 	
 	character1.draw();
+	character2.draw();
+	character3.draw();
 	
 	//push the back buffer to the screen
     glutSwapBuffers();
@@ -285,13 +293,15 @@ void renderScene2(void) {
 	
 	glMatrixMode(GL_MODELVIEW);                           // make sure we aren't changing the projection matrix!
 	glLoadIdentity();
-	gluLookAt(character1.getX(), character1.getY()+2, character1.getZ(),
-	fpX, character1.getY()+2, fpZ,
+	gluLookAt(character1.getX(), character1.getY()+.7, character1.getZ(),
+	fpX, character1.getY()+.6, fpZ,
 	0, 1, 0);
 	
 	drawGrid();
 	
 	character1.draw();
+	character2.draw();
+	character3.draw();
 	
 	glutSwapBuffers();
 }

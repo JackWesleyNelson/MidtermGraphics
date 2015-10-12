@@ -21,14 +21,14 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 void Character::drawBody() {
-	glColor3f(.1, .1, .1);							// Torso
+	glColor3f(red, green, blue);							// Torso
 	glPushMatrix(); {
 		glTranslatef(0, -1.15, 0);
 		glScalef(.75, .9, .80);
 		glutSolidCube(2);
 	}; glPopMatrix();
 
-	glColor3f(.1, .1, .1);
+	glColor3f(red, green, blue);
 	glPushMatrix(); {									// Right Arm
 		glTranslatef(0, -.575, 1);
 		glRotatef(-limbTheta, 0, 0, 1);
@@ -41,7 +41,7 @@ void Character::drawBody() {
 		glutSolidCube(.6);
 	}; glPopMatrix();
 
-	glColor3f(.1, .1, .1);
+	glColor3f(red, green, blue);
 	glPushMatrix(); {									// Left Arm
 		glTranslatef(0, -.575, -1);
 		glRotatef(limbTheta, 0, 0, 1);
@@ -54,7 +54,7 @@ void Character::drawBody() {
 		glutSolidCube(.6);
 	}; glPopMatrix();
 
-	glColor3f(.1, .1, .1);							//Right Leg
+	glColor3f(red, green, blue);									//Right Leg
 	glPushMatrix(); {
 		glTranslatef(0, -1.5, .35);
 		glRotatef(limbTheta, 0, 0, 1);
@@ -63,7 +63,7 @@ void Character::drawBody() {
 		glutSolidCube(1);
 	}; glPopMatrix();
 
-	glColor3f(.1, .1, .1);							// Left Leg
+	glColor3f(red, green, blue);									// Left Leg
 	glPushMatrix(); {
 		glTranslatef(0, -1.5, -.35);
 		glRotatef(-limbTheta, 0, 0, 1);
@@ -77,7 +77,7 @@ void Character::drawHead() {
 	glColor3f(1, 1, 1);
 	glutSolidCube(1);
 
-	glColor3f(.1, .1, .1);							// Hat Brim
+	glColor3f(red, green, blue);									// Hat Brim
 	glPushMatrix(); {
 		glTranslatef(0, .55, 0);
 		glScalef(1.35, .25, 1.35);
@@ -109,7 +109,7 @@ void Character::drawHead() {
 void Character::drawName() {
 	glDisable(GL_LIGHTING);
 	// the text
-	char scrtext[64] = "Zilch";
+	//char scrtext[64] = "Zilch";
 
 	// choose a colour
 	glColor3f(0, 1, 0);
@@ -119,8 +119,8 @@ void Character::drawName() {
 	glTranslatef(-1.35, 1.75, 0);
 	// how big we want it
 	glScalef(.01, .01, .01);
-	for (int c = 0; scrtext[c] != 0; ++c)
-		glutStrokeCharacter(GLUT_STROKE_ROMAN, scrtext[c]);
+	for (int c = 0; name[c] != 0; ++c)
+		glutStrokeCharacter(GLUT_STROKE_ROMAN, name[c]);
 	glPopMatrix();
 	glEnable(GL_LIGHTING);
 }
@@ -270,6 +270,18 @@ void Character::setZ(float z)
 	heroZ = z;
 }
 
+void Character::setColor(float r, float g, float b)
+{
+	red = r;
+	green = g;
+	blue = b;
+}
+
+void Character::setName(char* n)
+{
+	name = n;
+}
+
 float Character::getX()
 {
 	return heroX;
@@ -292,7 +304,6 @@ float Character::getTheta()
 
 Character::Character()
 {
-
 	heroX = 0;
 	heroY = 2;
 	heroZ = 0;
@@ -306,6 +317,10 @@ Character::Character()
 	characterR = false;
 	characterF = false;
 	characterB = false;
+	red = 0.1f;
+	green = 0.1f;
+	blue = 0.1f;
+	name = "Zilch";
 }
 
 Character::Character(float characterX, float characterY, float characterZ)
@@ -323,6 +338,10 @@ Character::Character(float characterX, float characterY, float characterZ)
 	characterR = false;
 	characterF = false;
 	characterB = false;
+	red = 0.1f;
+	green = 0.1f;
+	blue = 0.1f;
+	name = "Zilch";
 }
 
 Character::Character(Point p)
@@ -340,4 +359,8 @@ Character::Character(Point p)
 	characterR = false;
 	characterF = false;
 	characterB = false;
+	red = 0.1f;
+	green = 0.1f;
+	blue = 0.1f;
+	name = "Zilch";
 }
