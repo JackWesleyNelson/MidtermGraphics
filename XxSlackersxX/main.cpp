@@ -55,8 +55,9 @@
 #include <fstream>			// we'll use ifstream	
 #include <string>			// for, well strings!
 #include <vector>			// and vectors (the storage container, not directional)
+#include <sstream>
+#include <string.h>
 using namespace std;
-
 
 // Headers We've Written
 #include "Point.h"
@@ -77,8 +78,10 @@ int mouseX = 0, mouseY = 0;                 // last known X and Y of the mouse
 bool freecamON = true, cameraF = false, cameraB = false;		//camera movement booleans
 bool Zselect = true;							//character selection booleans 
 
-bool firstCam = false;
+bool firstCam = false;			// First Person camera variables
 float fpX, fpZ;
+
+float frame=0,timebase=0;	// for FPS counter
 
 GLint menuId;				    // handle for our menu
 
@@ -89,6 +92,7 @@ Character chars[3];
 int charIt = 0, charIt2 = 0;
 //Character character1, character2, character3;
 ARCamera arcamera;
+
 
 // getRand() ///////////////////////////////////////////////////////////////////
 //
@@ -279,6 +283,27 @@ void renderScene(void) {
 	
 	for(int i=0;i<3;i++)
 		chars[i].draw();
+	
+	static float framesPerSecond    = 0.0f;       // This will store our fps
+    static float lastTime   = 0.0f;       // This will hold the time from the last frame
+    float currentTime = GetTickCount() * 0.001f;    
+    framesPerSecond++;
+	char s[6];
+    if( currentTime - lastTime > 1.0f )
+    {
+        lastTime = currentTime;
+		sprintf(s, "%f", (int)framesPerSecond);
+		fprintf(stderr, "\nCurrent Frames Per Second: %d\n\n", s[0]);
+        framesPerSecond = 0;
+    }
+	
+	for(int i = 0; i < 6; i++) {
+		glPushMatrix(); {
+			glColor3f( 1, 1, 1 );
+			glRasterPos2f(20+i*15, 20);
+			glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, s[i]);
+		} glPopMatrix();
+	}
 	
 	//push the back buffer to the screen
     glutSwapBuffers();
