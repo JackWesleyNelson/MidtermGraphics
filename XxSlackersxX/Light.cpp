@@ -101,7 +101,7 @@ Light::Light(float position[4], float ambient[4], float diffuse[4], float specul
 void Light::setPosition(float position[4])
 {
 	for (int i = 0; i < 4; i++) {
-		//set the default position
+		//set the position state
 		this->position[i] = position[i];
 	}
 }
@@ -109,7 +109,7 @@ void Light::setPosition(float position[4])
 void Light::setAmbient(float ambient[4])
 {
 	for (int i = 0; i < 4; i++) {
-		//set the default position
+		//set the ambient state
 		this->ambient[i] = ambient[i];
 	}
 }
@@ -117,7 +117,7 @@ void Light::setAmbient(float ambient[4])
 void Light::setDiffuse(float diffuse[4])
 {
 	for (int i = 0; i < 4; i++) {
-		//set the default position
+		//set the diffuse state
 		this->diffuse[i] = diffuse[i];
 	}
 }
@@ -125,19 +125,19 @@ void Light::setDiffuse(float diffuse[4])
 void Light::setSpecular(float specular[4])
 {
 	for (int i = 0; i < 4; i++) {
-		//set the default position
+		//set the specular state
 		this->specular[i] = specular[i];
 	}
 }
 
 void Light::setEnabled(bool enabled)
 {
-	for (int i = 0; i < 4; i++) {
-		//set the default position
-		this->enabled[i] = enabled[i];
-	}
+		//set the enabled state
+		this->enabled = enabled;
 }
 
+
+//update the light to the current values.
 void Light::updateLight()
 {
 	//if lighting is not enable, enable it.
