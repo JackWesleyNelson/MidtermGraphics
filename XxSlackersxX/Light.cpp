@@ -71,16 +71,16 @@ Light::Light(float position[4], float ambient[4], float diffuse[4], float specul
 	//set the given default array values
 	for (int i = 0; i < 4; i++) {
 		//set the default position
-		this.position[i] = position[i];
+		this->position[i] = position[i];
 		//set the default ambient light
-		this.ambient[i] = ambient[i];
+		this->ambient[i] = ambient[i];
 		//set the default diffuse light
-		this.diffuse[i] = diffuse[i];
+		this->diffuse[i] = diffuse[i];
 		//set the default specular light
-		this.specular[i] = specular[i];
+		this->specular[i] = specular[i];
 	}
 	//set the default light state
-	enabled = enabled;
+	this->enabled = enabled;
 
 	//if lighting is not enable, enable it.
 	if (!glIsEnabled(GL_LIGHTING)) {
