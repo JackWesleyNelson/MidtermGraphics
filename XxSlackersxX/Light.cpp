@@ -98,4 +98,62 @@ Light::Light(float position[4], float ambient[4], float diffuse[4], float specul
 	glLightfv(lightEnum, GL_SPECULAR, specular);
 }
 
+void Light::setPosition(float position[4])
+{
+	for (int i = 0; i < 4; i++) {
+		//set the default position
+		this->position[i] = position[i];
+	}
+}
+
+void Light::setAmbient(float ambient[4])
+{
+	for (int i = 0; i < 4; i++) {
+		//set the default position
+		this->ambient[i] = ambient[i];
+	}
+}
+
+void Light::setDiffuse(float diffuse[4])
+{
+	for (int i = 0; i < 4; i++) {
+		//set the default position
+		this->diffuse[i] = diffuse[i];
+	}
+}
+
+void Light::setSpecular(float specular[4])
+{
+	for (int i = 0; i < 4; i++) {
+		//set the default position
+		this->specular[i] = specular[i];
+	}
+}
+
+void Light::setEnabled(bool enabled)
+{
+	for (int i = 0; i < 4; i++) {
+		//set the default position
+		this->enabled[i] = enabled[i];
+	}
+}
+
+void Light::updateLight()
+{
+	//if lighting is not enable, enable it.
+	if (!glIsEnabled(GL_LIGHTING)) {
+		glEnable(GL_LIGHTING);
+	}
+
+	//enable the light
+	if (!glIsEnabled(lightEnum) && enabled) {
+		glEnable(lightEnum);
+	}
+
+	//set the default color values
+	glLightfv(lightEnum, GL_DIFFUSE, diffuse);
+	glLightfv(lightEnum, GL_AMBIENT, ambient);
+	glLightfv(lightEnum, GL_SPECULAR, specular);
+}
+
 

@@ -20,6 +20,12 @@ public:
 	static int lightID;
 	Light();
 	Light(float position[4], float ambient[4], float diffuse[4], float specular[4], bool enabled);
+	void setPosition(float position[4]);
+	void setAmbient(float ambient[4]);
+	void setDiffuse(float diffuse[4]);
+	void setSpecular(float specular[4]);
+	void setEnabled(bool enabled);
+	void updateLight();
 
 private:
 	float position[4], ambient[4], diffuse[4], specular[4];
