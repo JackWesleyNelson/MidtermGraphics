@@ -291,8 +291,8 @@ void initScene()  {
 	
 	chars[0] = Character(0, 0, 0);
 	chars[1] = Character(5, 0, 5);
-	chars[1].setColor( .3, .3, 1);
-	chars[1].setName("Thing 1");
+	chars[1].setColor( .3, 1, .3);
+	chars[1].setName("Dibstix");
 	chars[2] = Character(10, 0,10);
 	chars[2].setColor( 1, .3, .3);
 	chars[2].setName("Thing 2");
