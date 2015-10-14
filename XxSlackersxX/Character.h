@@ -43,18 +43,6 @@ public:
 	float getZ();
 	float getTheta();
 
-	const static float red[4];
-	const static float green[4];
-	const static float blue[4];
-	const static float white[4];
-	const static float black[4];
-
-	const static Material materialRed;
-	const static Material materialGreen;
-	const static Material materialBlue;
-	const static Material materialWhite;
-	const static Material materialBlack;
-
 private:
 	//Zilch's attributes
 	float heroX, heroY, heroZ, heroTheta, eyeTheta, limbTheta, step, color[4];
@@ -62,13 +50,22 @@ private:
 	char* name;
 	Material materialCustom;
 
+	float red[4];
+	float green[4];
+	float blue[4];
+	float white[4];
+	float black[4];
 
-
-
+	Material materialRed;
+	Material materialGreen;
+	Material materialBlue;
+	Material materialWhite;
+	Material materialBlack;
 
 	void drawBody();
 	void drawHead();
 	void drawName();
+	void setMaterials();
 
 };
 

@@ -19,8 +19,7 @@ class Material{
 public:
 	Material();
 	Material(float color[4]);
-	Material(const float color[4]);
-	void applyMaterial() const;
+	void applyMaterial();
 private:
 	float diffuseColor[4];
 	int facesEnum;

@@ -39,7 +39,7 @@ Material::Material(float color[4])
 }
 
 
-void Material::applyMaterial() const
+void Material::applyMaterial()
 {
 	//set color material to disabled
 	if (glIsEnabled(GL_COLOR_MATERIAL)) {

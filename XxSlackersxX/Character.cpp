@@ -15,17 +15,7 @@
 
 #include "Character.h"
 
-const float Character::red[4] = { 1, 0, 0, 1 };
-const float Character::green[4] = { 0, 1, 0, 1 };
-const float Character::blue[4] = { 0, 0, 1, 1 };
-const float Character::white[4] = { 1, 1, 1, 1 };
-const float Character::black[4] = { 0, 0, 0, 1 };
 
-const Material Character::materialRed = Material(Character::red);
-const Material Character::materialGreen = Material(Character::green);
-const Material Character::materialBlue = Material(Character::blue);
-const Material Character::materialWhite = Material(Character::white);
-const Material Character::materialBlack = Material(Character::black);
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -40,7 +30,7 @@ void Character::drawBody() {
 		glutSolidCube(2);
 	}; glPopMatrix();
 
-	materialCustom.applyMaterial();
+	//materialCustom.applyMaterial();
 	glPushMatrix(); {									// Right Arm
 		glTranslatef(0, -.575, 1);
 		glRotatef(-limbTheta, 0, 0, 1);
@@ -49,11 +39,11 @@ void Character::drawBody() {
 		glutSolidCube(1);
 		glScalef(1, 1 / 1.75, 1);
 		glTranslatef(0, -.7, .1);
-		materialWhite.applyMaterial();
+		//materialWhite.applyMaterial();
 		glutSolidCube(.6);
 	}; glPopMatrix();
 
-	materialCustom.applyMaterial();
+	//materialCustom.applyMaterial();
 	glPushMatrix(); {									// Left Arm
 		glTranslatef(0, -.575, -1);
 		glRotatef(limbTheta, 0, 0, 1);
@@ -62,11 +52,11 @@ void Character::drawBody() {
 		glutSolidCube(1);
 		glScalef(1, 1 / 1.75, 1);
 		glTranslatef(0, -.7, -.1);
-		materialWhite.applyMaterial();
+		//materialWhite.applyMaterial();
 		glutSolidCube(.6);
 	}; glPopMatrix();
 
-	materialCustom.applyMaterial();								//Right Leg
+	//materialCustom.applyMaterial();								//Right Leg
 	glPushMatrix(); {
 		glTranslatef(0, -1.5, .35);
 		glRotatef(limbTheta, 0, 0, 1);
@@ -75,7 +65,7 @@ void Character::drawBody() {
 		glutSolidCube(1);
 	}; glPopMatrix();
 
-	materialCustom.applyMaterial();								// Left Leg
+	//materialCustom.applyMaterial();								// Left Leg
 	glPushMatrix(); {
 		glTranslatef(0, -1.5, -.35);
 		glRotatef(-limbTheta, 0, 0, 1);
@@ -86,10 +76,10 @@ void Character::drawBody() {
 }
 
 void Character::drawHead() {
-	materialWhite.applyMaterial();
+	//materialWhite.applyMaterial();
 	glutSolidCube(1);
 
-	materialCustom.applyMaterial();									// Hat Brim
+	//materialCustom.applyMaterial();									// Hat Brim
 	glPushMatrix(); {
 		glTranslatef(0, .55, 0);
 		glScalef(1.35, .25, 1.35);
@@ -102,7 +92,7 @@ void Character::drawHead() {
 		glutSolidCube(1);
 	}; glPopMatrix();
 
-	materialRed.applyMaterial();
+	//materialRed.applyMaterial();
 	glPushMatrix(); {									// Right Eye
 		glTranslatef(.5, .20, .25);
 		glRotatef(-eyeTheta, 1, 0, 0);
@@ -124,7 +114,7 @@ void Character::drawName() {
 	//char scrtext[64] = "Zilch";
 
 	// choose a colour
-	materialGreen.applyMaterial();
+	//materialGreen.applyMaterial();
 	glPushMatrix();
 	// where we want it written
 	glRotatef(90, 0, 1, 0);
@@ -288,7 +278,7 @@ void Character::setColor(float r, float g, float b, float a)
 	color[1] = g;
 	color[2] = b;
 	color[3] = a;
-	materialCustom = Material(color);
+	//materialCustom = Material(color);
 }
 
 void Character::setName(char* n)
@@ -322,6 +312,7 @@ char* Character::getName() {
 
 Character::Character()
 {
+	setMaterials();
 	heroX = 0;
 	heroY = 2;
 	heroZ = 0;
@@ -339,12 +330,13 @@ Character::Character()
 	color[1] = .1f;
 	color[2] = .1f;
 	color[3] = 1;
-	materialCustom = Material(color);
+	//materialCustom = Material(color);
 	name = "Zilch";
 }
 
 Character::Character(float characterX, float characterY, float characterZ)
 {
+	setMaterials();
 	heroX = characterX;
 	heroY = characterY+2;
 	heroZ = characterZ;
@@ -362,12 +354,13 @@ Character::Character(float characterX, float characterY, float characterZ)
 	color[1] = .1f;
 	color[2] = .1f;
 	color[3] = 1;
-	materialCustom = Material(color);
+	//materialCustom = Material(color);
 	name = "Zilch";
 }
 
 Character::Character(Point p)
 {
+	setMaterials();
 	heroX = p.getX();
 	heroY = p.getY() + 2;
 	heroZ = p.getZ();
@@ -385,6 +378,40 @@ Character::Character(Point p)
 	color[1] = .1f;
 	color[2] = .1f;
 	color[3] = 1;
-	materialCustom = Material(color);
+	//materialCustom = Material(color);
 	name = "Zilch";
+}
+
+void Character::setMaterials()
+{
+	red[0] = 1;
+	red[1] = 0;
+	red[2] = 0;
+	red[3] = 1;
+
+	green[0] = 0;
+	green[1] = 1;
+	green[2] = 0;
+	green[3] = 1;
+
+	blue[0] = 0;
+	blue[1] = 0;
+	blue[2] = 1;
+	blue[3] = 1;
+
+	white[0] = 1;
+	white[1] = 1;
+	white[2] = 1;
+	white[3] = 1;
+
+	black[0] = 0;
+	black[1] = 0;
+	black[2] = 0;
+	black[3] = 1;
+
+	//materialRed = Material(red);
+	//materialGreen = Material(green);
+	//materialBlue = Material(blue);
+	//materialWhite = Material(white);
+	//materialBlack = Material(black);
 }
