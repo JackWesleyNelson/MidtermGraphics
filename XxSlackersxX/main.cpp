@@ -265,13 +265,14 @@ void initScene()  {
     glEnable(GL_DEPTH_TEST);
 
     //Set default values for an ordinary light
-    float diffuseCol[4] = { 1, 1, 1, 1};
-    float ambientCol[4] = { 0.0, 0.0, 0.0, 1.0 };
-    float lPosition[4] = { 10, 10, 10, 1 };
-	float specularCol[4] = {0, 0, 0, 1};
+    float diffuseCol[4] = { 1, .01f, .01f, 1};
+    float ambientCol[4] = { 0.0f, 0.0f, 0.0f, 1.0 };
+    float lPosition[4] = { 0.0f, 0.0f, 0.0f, 1 };
+	float specularCol[4] = {0.0f, 0.0f, 0.0f, 1};
 	//initialize our light variable given the using the constructer that takes the above values.
 	light1 = Light(lPosition, ambientCol, diffuseCol, specularCol, true);
-	
+	light1.updateLight();
+
     // tell OpenGL not to use the material system; just use whatever we 
     // pass with glColor*()
     glEnable( GL_COLOR_MATERIAL );
@@ -289,6 +290,7 @@ void initScene()  {
 	camera.recomputeOrientation();
 	
 	chars[0] = Character(0, 0, 0);
+	chars[0].setColor(0, 0, 0, 1);
 	chars[1] = Character(5, 0, 5);
 	chars[1].setColor( .3, 1, .3, 1);
 	chars[1].setName("Dibstix");

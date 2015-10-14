@@ -4,6 +4,7 @@
 
 #include "Point.h"
 #include "Material.h"
+#include "Light.h"
 
 class Character {
 public:
@@ -46,6 +47,7 @@ public:
 private:
 	//Zilch's attributes
 	float heroX, heroY, heroZ, heroTheta, eyeTheta, limbTheta, step, color[4];
+	float position[4];
 	bool moving, limbUp, characterL, characterR, characterF, characterB;
 	char* name;
 	Material materialCustom;
@@ -66,6 +68,8 @@ private:
 	void drawHead();
 	void drawName();
 	void setMaterials();
+
+	Light light2;
 
 };
 

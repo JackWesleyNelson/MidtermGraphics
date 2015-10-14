@@ -22,6 +22,9 @@ Light::Light()
 	lightEnum = lightID;
 	//increment id for next light
 	lightID += 0x0001;
+
+	isSpotlight = false;
+
 	//set the default position
 	position[0] = 0;
 	position[1] = 0;
@@ -67,6 +70,8 @@ Light::Light(float position[4], float ambient[4], float diffuse[4], float specul
 	lightEnum = lightID;
 	//increment id for next light
 	lightID += 0x0001;
+
+	isSpotlight = false;
 
 	//set the given default array values
 	for (int i = 0; i < 4; i++) {
@@ -154,6 +159,19 @@ void Light::updateLight()
 	glLightfv(lightEnum, GL_DIFFUSE, diffuse);
 	glLightfv(lightEnum, GL_AMBIENT, ambient);
 	glLightfv(lightEnum, GL_SPECULAR, specular);
+
+	if (isSpotlight) {
+		GLfloat dir[4] = { 0, 0, 1, 0 };
+		glLightfv(lightEnum, GL_SPOT_DIRECTION, dir);
+		glLightf(lightEnum, GL_SPOT_CUTOFF, 12);
+		glLightf(lightEnum, GL_SPOT_EXPONENT, 100);
+	}
+
+}
+
+void Light::setSpotlight(bool state)
+{
+	isSpotlight = state;
 }
 
 

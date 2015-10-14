@@ -115,7 +115,7 @@ void Character::drawName() {
 	//char scrtext[64] = "Zilch";
 
 	// choose a colour
-	materialGreen.applyMaterial();
+	glColor3f(0, 1, 0);
 	glPushMatrix();
 	// where we want it written
 	glRotatef(90, 0, 1, 0);
@@ -139,6 +139,13 @@ void Character::draw() {
 
 		glPushMatrix(); {
 			drawHead();									// Hat, Face, and Head
+			float ambientCol[4] = { 0, 0, 0, 1.0 };
+			float lPosition[4] = { 0, 0, 0, 1 };
+			float specularCol[4] = { 0, 0, 0, 1 };
+			float diffuseCol2[4] = { 1, 0, 0, 1 };
+			//light2 = Light(lPosition, ambientCol, diffuseCol2, specularCol, true);
+			//light2.setSpotlight(true);
+			//light2.updateLight();
 		}; glPopMatrix();
 
 		glPushMatrix(); {

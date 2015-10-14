@@ -26,10 +26,11 @@ public:
 	void setSpecular(float specular[4]);
 	void setEnabled(bool enabled);
 	void updateLight();
+	void setSpotlight(bool state);
 
 private:
 	float position[4], ambient[4], diffuse[4], specular[4];
-	bool enabled;
+	bool enabled, isSpotlight;
 	int lightEnum;
 };
 
