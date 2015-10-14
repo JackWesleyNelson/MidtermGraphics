@@ -25,7 +25,7 @@
 void Character::drawBody() {
 	// Torso
 	materialCustom.applyMaterial();
-	glPushMatrix(); {
+	glPushMatrix();{
 		glTranslatef(0, -1.15, 0);
 		glScalef(.75, .9, .80);
 		glutSolidCube(2);
@@ -110,7 +110,7 @@ void Character::drawHead() {
 }
 
 void Character::drawName() {
-	glDisable(GL_LIGHTING);
+	//glDisable(GL_LIGHTING);
 	// the text
 	//char scrtext[64] = "Zilch";
 
@@ -125,7 +125,7 @@ void Character::drawName() {
 	for (int c = 0; name[c] != 0; ++c)
 		glutStrokeCharacter(GLUT_STROKE_ROMAN, name[c]);
 	glPopMatrix();
-	glEnable(GL_LIGHTING);
+	//glEnable(GL_LIGHTING);
 }
 
 void Character::draw() {

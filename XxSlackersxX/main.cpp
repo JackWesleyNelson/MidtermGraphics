@@ -265,13 +265,21 @@ void initScene()  {
     glEnable(GL_DEPTH_TEST);
 
     //Set default values for an ordinary light
-    float diffuseCol[4] = { 1, 1, 1, 1};
-    float ambientCol[4] = { 0.0, 0.0, 0.0, 1.0 };
+    /*float diffuseCol[4] = { .1, .1, .1, 1};
+    float ambientCol[4] = { 1, 1, 1, 1.0 };
     float lPosition[4] = { 10, 10, 10, 1 };
 	float specularCol[4] = {0, 0, 0, 1};
 	//initialize our light variable given the using the constructer that takes the above values.
-	light1 = Light(lPosition, ambientCol, diffuseCol, specularCol, true);
+	light1 = Light(lPosition, ambientCol, diffuseCol, specularCol, true);*/
 	
+	glEnable( GL_LIGHTING );            // we are now using lighting
+    glEnable( GL_LIGHT0 );              // and turn on Light 0 please (thank you)
+    float diffuseCol[4] = { .1, .1, .1, .1 };           // TODO #06: Change the colors!
+    glLightfv( GL_LIGHT0, GL_DIFFUSE, diffuseCol );
+    float ambientCol[4] = { 0.0, 0.0, 0.0, 1.0 };
+    glLightfv( GL_LIGHT0, GL_AMBIENT, ambientCol );
+	
+	glEnable( GL_LIGHT1 );
     // tell OpenGL not to use the material system; just use whatever we 
     // pass with glColor*()
     glEnable( GL_COLOR_MATERIAL );
@@ -323,9 +331,23 @@ void renderScene(void) {
 	
 	drawGrid();
 	
+	glPushMatrix(); {
+		glTranslatef(chars[0].getX(), chars[0].getY(), chars[0].getZ());		// X, Y and Z position
+		glRotatef(-chars[0].getTheta()+90, 0, 1, 0);
+		
+		float pos[4] = { 0.0, -0.25, 0.0, 1.0 };
+		glLightfv( GL_LIGHT1, GL_POSITION, pos );
+		float newCol[4] = { 1, 1, 1, 1 };
+		glLightfv( GL_LIGHT1, GL_DIFFUSE, newCol );
+	
+		GLfloat dir[4] = {0, 0, 1, 0};
+		glLightfv( GL_LIGHT1, GL_SPOT_DIRECTION, dir );
+		glLightf( GL_LIGHT1, GL_SPOT_CUTOFF, 12 );
+		glLightf( GL_LIGHT1, GL_SPOT_EXPONENT, 100 );
+	}; glPopMatrix();
+	
 	for(int i=0;i<3;i++)
 		chars[i].draw();
-	
 	
 	updateFPS();
 	
@@ -351,6 +373,21 @@ void renderScene2(void) {
 	
 	for(int i=0;i<3;i++)
 		chars[i].draw();
+	
+	glPushMatrix(); {
+		glTranslatef(chars[0].getX(), chars[0].getY(), chars[0].getZ());		// X, Y and Z position
+		glRotatef(-chars[0].getTheta()+90, 0, 1, 0);
+		
+		float pos[4] = { 0.0, -0.25, 0.0, 1.0 };
+		glLightfv( GL_LIGHT1, GL_POSITION, pos );
+		float newCol[4] = { 1, 1, 1, 1 };
+		glLightfv( GL_LIGHT1, GL_DIFFUSE, newCol );
+	
+		GLfloat dir[4] = {0, 0, 1, 0};
+		glLightfv( GL_LIGHT1, GL_SPOT_DIRECTION, dir );
+		glLightf( GL_LIGHT1, GL_SPOT_CUTOFF, 4 );
+		glLightf( GL_LIGHT1, GL_SPOT_EXPONENT, 50 );
+	}; glPopMatrix();
 	
 	glutSwapBuffers();
 }
