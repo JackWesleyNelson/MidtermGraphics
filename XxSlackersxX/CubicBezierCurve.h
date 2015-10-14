@@ -12,13 +12,20 @@ public:
     CubicBezierCurve(const std::vector<Point>& controlPoints);
     
     void draw(const int resolution);
-    
+    void setControlPoints(const std::vector<Point> points) {
+        this->controlPoints = points;
+    }
+
     
 private:
     void render(Point p0, Point p1, Point p2, Point p3, int resolution);
-    Point evaluate(Point p0, Point p1, Point p2, Point p3, float t);
-    
+   
     std::vector<Point> controlPoints;
 };
+
+Point evaluateBezier(Point p0, Point p1, Point p2, Point p3, float t);
+Point evaluateBezier(std::vector<Point> points, float t);
+
+
 
 #endif

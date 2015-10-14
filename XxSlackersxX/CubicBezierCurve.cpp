@@ -63,14 +63,14 @@ void CubicBezierCurve::render(Point p0, Point p1, Point p2, Point p3, int resolu
         for(int i=0; i <= resolution; i++) {
             j = i;
             j /= resolution;
-            pb = evaluate( p0, p1, p2, p3, j);
+            pb = evaluateBezier( p0, p1, p2, p3, j);
             glVertex3f( pb.getX(), pb.getY(), pb.getZ() );
         }
     }; glEnd();
     glPopMatrix();
 }
 
-Point CubicBezierCurve::evaluate(Point p0, Point p1, Point p2, Point p3, float t) {
+Point evaluateBezier(Point p0, Point p1, Point p2, Point p3, float t) {
     float b0 = powf((1-t), 3);
     float b1 = 3 * powf((1-t), 2) * t;
     float b2 = 3 * (1-t) * powf(t, 2);
