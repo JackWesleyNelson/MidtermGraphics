@@ -1,5 +1,5 @@
 TARGET = MP
-OBJECTS = Main.o Material.o Light.o Point.o Character.o Camera.o ARCamera.o CubicBezierCurve.o 
+OBJECTS = Main.o Material.o Light.o Point.o Character.o Camera.o ARCamera.o CubicBezierCurve.o BezierPatch.o BezierCurve.o
 
 CXX    = g++
 CFLAGS = -Wall -g 
@@ -54,7 +54,7 @@ endif
 all: $(TARGET)
 
 clean:
-	rm -f $(OBJECTS) $(TARGET)
+	rm -f *o $(TARGET)
 
 depend:
 	rm -f Makefile.bak
@@ -83,3 +83,6 @@ Character.o: Character.cpp Character.h
 Camera.o: Camera.cpp Camera.h
 ARCamera.o: ARCamera.cpp ARCamera.h
 Light.o: Light.cpp Light.h
+CubicBezierCurve.o: CubicBezierCurve.cpp CubicBezierCurve.h
+BezierPatch.o: BezierPatch.cpp BezierPatch.h
+BezierCurve.o: BezierCurve.cpp BezierCurve.h
