@@ -18,6 +18,9 @@ int Light::lightID = 0x4000;
 
 Light::Light()
 {
+	if (lightID == 0x4007) {
+		lightID += 0x0001;
+	}
 	//set light enum for current light
 	lightEnum = lightID;
 	//increment id for next light
@@ -96,6 +99,18 @@ Light::Light(float position[4], float ambient[4], float diffuse[4], float specul
 	glLightfv(lightEnum, GL_DIFFUSE, diffuse);
 	glLightfv(lightEnum, GL_AMBIENT, ambient);
 	glLightfv(lightEnum, GL_SPECULAR, specular);
+}
+
+void Light::spotlight() {
+	float pos[4] = { 0.0, -0.25, 0.0, 1.0 };
+	glLightfv(GL_LIGHT7, GL_POSITION, pos);
+	float newCol[4] = { 1, 1, 1, 1 };
+	glLightfv(GL_LIGHT7, GL_DIFFUSE, newCol);
+
+	GLfloat dir[4] = { 0, 0, 1, 0 };
+	glLightfv(GL_LIGHT7, GL_SPOT_DIRECTION, dir);
+	glLightf(GL_LIGHT7, GL_SPOT_CUTOFF, 12);
+	glLightf(GL_LIGHT7, GL_SPOT_EXPONENT, 100);
 }
 
 void Light::setPosition(float position[4])

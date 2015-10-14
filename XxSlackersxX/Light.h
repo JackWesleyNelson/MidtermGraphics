@@ -27,6 +27,8 @@ public:
 	void setEnabled(bool enabled);
 	void updateLight();
 
+	void spotlight();
+
 private:
 	float position[4], ambient[4], diffuse[4], specular[4];
 	bool enabled;
