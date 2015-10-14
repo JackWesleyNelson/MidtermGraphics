@@ -1,5 +1,5 @@
 TARGET = MP
-OBJECTS = Main.o Light.o Point.o Character.o Camera.o ARCamera.o CubicBezierCurve.o 
+OBJECTS = Main.o Material.o Light.o Point.o Character.o Camera.o ARCamera.o CubicBezierCurve.o 
 
 CXX    = g++
 CFLAGS = -Wall -g 
@@ -76,7 +76,8 @@ $(TARGET): $(OBJECTS)
 	$(CXX) $(CFLAGS) $(INCPATH) -o $@ $^ $(LIBPATH) $(LIBS)
 
 # DEPENDENCIES
-Main.o: Main.cpp Point.h
+Main.o: Main.cpp
+Material.o: Material.cpp Material.h
 Point.o: Point.cpp Point.h
 Character.o: Character.cpp Character.h
 Camera.o: Camera.cpp Camera.h

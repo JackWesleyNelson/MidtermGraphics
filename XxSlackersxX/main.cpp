@@ -65,7 +65,9 @@ using namespace std;
 #include "Point.h"
 #include "Camera.h"
 #include "ARCamera.h"
+#include "Material.h"
 #include "Character.h"
+#include "Light.h"
 // GLOBAL VARIABLES ////////////////////////////////////////////////////////////
 
 static size_t windowWidth = 640;
@@ -94,6 +96,8 @@ Character chars[3];
 int charIt = 0, charIt2 = 0;
 //Character character1, character2, character3;
 ARCamera arcamera;
+
+Light light1;
 
 
 // getRand() ///////////////////////////////////////////////////////////////////
@@ -260,18 +264,13 @@ void mouseMotion(int x, int y) {
 void initScene()  {
     glEnable(GL_DEPTH_TEST);
 
-    //******************************************************************
-    // this is some code to enable a default light for the scene;
-    // feel free to play around with this, but we won't talk about
-    // lighting in OpenGL for another couple of weeks yet.
-    float lightCol[4] = { 1, 1, 1, 1};
+    //Set default values for an ordinary light
+    float diffuseCol[4] = { 1, 1, 1, 1};
     float ambientCol[4] = { 0.0, 0.0, 0.0, 1.0 };
     float lPosition[4] = { 10, 10, 10, 1 };
-    glLightfv( GL_LIGHT0, GL_POSITION,lPosition );
-    glLightfv( GL_LIGHT0, GL_DIFFUSE,lightCol );
-    glLightfv( GL_LIGHT0, GL_AMBIENT, ambientCol );
-    glEnable( GL_LIGHTING );
-    glEnable( GL_LIGHT0 );
+	float specularCol[4] = {0, 0, 0, 1};
+	//initialize our light variable given the using the constructer that takes the above values.
+	light1 = Light(lPosition, ambientCol, diffuseCol, specularCol, true);
 	
     // tell OpenGL not to use the material system; just use whatever we 
     // pass with glColor*()
@@ -291,10 +290,10 @@ void initScene()  {
 	
 	chars[0] = Character(0, 0, 0);
 	chars[1] = Character(5, 0, 5);
-	chars[1].setColor( .3, 1, .3);
+	chars[1].setColor( .3, 1, .3, 1);
 	chars[1].setName("Dibstix");
 	chars[2] = Character(10, 0,10);
-	chars[2].setColor( 1, .3, .3);
+	chars[2].setColor( 1, .3, .3, 1);
 	chars[2].setName("Thing 2");
 	
 	arcamera = ARCamera(chars[charIt].getX(), chars[charIt].getY(), chars[charIt].getZ());
