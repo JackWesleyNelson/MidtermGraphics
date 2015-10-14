@@ -24,13 +24,14 @@
 ////////////////////////////////////////////////////////////////////////////////
 void Character::drawBody() {
 	// Torso
+	materialCustom.applyMaterial();
 	glPushMatrix(); {
 		glTranslatef(0, -1.15, 0);
 		glScalef(.75, .9, .80);
 		glutSolidCube(2);
 	}; glPopMatrix();
 
-	//materialCustom.applyMaterial();
+	materialCustom.applyMaterial();
 	glPushMatrix(); {									// Right Arm
 		glTranslatef(0, -.575, 1);
 		glRotatef(-limbTheta, 0, 0, 1);
@@ -39,11 +40,11 @@ void Character::drawBody() {
 		glutSolidCube(1);
 		glScalef(1, 1 / 1.75, 1);
 		glTranslatef(0, -.7, .1);
-		//materialWhite.applyMaterial();
+		materialWhite.applyMaterial();
 		glutSolidCube(.6);
 	}; glPopMatrix();
 
-	//materialCustom.applyMaterial();
+	materialCustom.applyMaterial();
 	glPushMatrix(); {									// Left Arm
 		glTranslatef(0, -.575, -1);
 		glRotatef(limbTheta, 0, 0, 1);
@@ -52,11 +53,11 @@ void Character::drawBody() {
 		glutSolidCube(1);
 		glScalef(1, 1 / 1.75, 1);
 		glTranslatef(0, -.7, -.1);
-		//materialWhite.applyMaterial();
+		materialWhite.applyMaterial();
 		glutSolidCube(.6);
 	}; glPopMatrix();
 
-	//materialCustom.applyMaterial();								//Right Leg
+	materialCustom.applyMaterial();								//Right Leg
 	glPushMatrix(); {
 		glTranslatef(0, -1.5, .35);
 		glRotatef(limbTheta, 0, 0, 1);
@@ -65,7 +66,7 @@ void Character::drawBody() {
 		glutSolidCube(1);
 	}; glPopMatrix();
 
-	//materialCustom.applyMaterial();								// Left Leg
+	materialCustom.applyMaterial();								// Left Leg
 	glPushMatrix(); {
 		glTranslatef(0, -1.5, -.35);
 		glRotatef(-limbTheta, 0, 0, 1);
@@ -76,10 +77,10 @@ void Character::drawBody() {
 }
 
 void Character::drawHead() {
-	//materialWhite.applyMaterial();
+	materialWhite.applyMaterial();
 	glutSolidCube(1);
 
-	//materialCustom.applyMaterial();									// Hat Brim
+	materialCustom.applyMaterial();									// Hat Brim
 	glPushMatrix(); {
 		glTranslatef(0, .55, 0);
 		glScalef(1.35, .25, 1.35);
@@ -92,7 +93,7 @@ void Character::drawHead() {
 		glutSolidCube(1);
 	}; glPopMatrix();
 
-	//materialRed.applyMaterial();
+	materialRed.applyMaterial();
 	glPushMatrix(); {									// Right Eye
 		glTranslatef(.5, .20, .25);
 		glRotatef(-eyeTheta, 1, 0, 0);
@@ -114,7 +115,7 @@ void Character::drawName() {
 	//char scrtext[64] = "Zilch";
 
 	// choose a colour
-	//materialGreen.applyMaterial();
+	materialGreen.applyMaterial();
 	glPushMatrix();
 	// where we want it written
 	glRotatef(90, 0, 1, 0);
@@ -278,7 +279,7 @@ void Character::setColor(float r, float g, float b, float a)
 	color[1] = g;
 	color[2] = b;
 	color[3] = a;
-	//materialCustom = Material(color);
+	materialCustom = Material(color);
 }
 
 void Character::setName(char* n)
@@ -330,7 +331,7 @@ Character::Character()
 	color[1] = .1f;
 	color[2] = .1f;
 	color[3] = 1;
-	//materialCustom = Material(color);
+	materialCustom = Material(color);
 	name = "Zilch";
 }
 
@@ -354,7 +355,7 @@ Character::Character(float characterX, float characterY, float characterZ)
 	color[1] = .1f;
 	color[2] = .1f;
 	color[3] = 1;
-	//materialCustom = Material(color);
+	materialCustom = Material(color);
 	name = "Zilch";
 }
 
@@ -378,7 +379,7 @@ Character::Character(Point p)
 	color[1] = .1f;
 	color[2] = .1f;
 	color[3] = 1;
-	//materialCustom = Material(color);
+	materialCustom = Material(color);
 	name = "Zilch";
 }
 
@@ -409,9 +410,9 @@ void Character::setMaterials()
 	black[2] = 0;
 	black[3] = 1;
 
-	//materialRed = Material(red);
-	//materialGreen = Material(green);
-	//materialBlue = Material(blue);
-	//materialWhite = Material(white);
-	//materialBlack = Material(black);
+	materialRed = Material(red);
+	materialGreen = Material(green);
+	materialBlue = Material(blue);
+	materialWhite = Material(white);
+	materialBlack = Material(black);
 }
