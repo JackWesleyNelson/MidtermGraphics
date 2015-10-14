@@ -18,7 +18,7 @@ int Light::lightID = 0x4000;
 
 Light::Light()
 {
-	if (lightID == 0x4007) {
+	if (lightID == 0x4006) {
 		lightID += 0x0001;
 	}
 	//set light enum for current light
@@ -66,6 +66,9 @@ Light::Light()
 
 Light::Light(float position[4], float ambient[4], float diffuse[4], float specular[4], bool enabled)
 {
+	if (lightID == 0x4006) {
+		lightID += 0x0001;
+	}
 	//set light enum for current light
 	lightEnum = lightID;
 	//increment id for next light

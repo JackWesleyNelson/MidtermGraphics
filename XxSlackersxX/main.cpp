@@ -342,7 +342,6 @@ void renderScene(void) {
 }
 
 void renderScene2(void) {
-	glDrawBuffer(GL_BACK);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	// update the modelview matrix based on the camera's position
