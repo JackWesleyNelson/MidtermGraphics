@@ -46,22 +46,24 @@ Light::Light()
 	specular[2] = 0;
 	specular[3] = 1;
 	//set the default light state
-	enabled = true;
+    enabled = true;
+}
 
-	//if lighting is not enable, enable it.
-	if (!glIsEnabled(GL_LIGHTING)) {
-		glEnable(GL_LIGHTING);
-	}
-
-	//enable the light
-	if (!glIsEnabled(lightEnum)) {
-		glEnable(lightEnum);
-	}
-	
-	//set the default color values
-	glLightfv(lightEnum, GL_DIFFUSE, diffuse);
-	glLightfv(lightEnum, GL_AMBIENT, ambient);
-	glLightfv(lightEnum, GL_SPECULAR, specular);
+void Light::init() {
+    //if lighting is not enable, enable it.
+    if (!glIsEnabled(GL_LIGHTING)) {
+        glEnable(GL_LIGHTING);
+    }
+    
+    //enable the light
+    if (!glIsEnabled(lightEnum)) {
+        glEnable(lightEnum);
+    }
+    
+    //set the default color values
+    glLightfv(lightEnum, GL_DIFFUSE, diffuse);
+    glLightfv(lightEnum, GL_AMBIENT, ambient);
+    glLightfv(lightEnum, GL_SPECULAR, specular);
 }
 
 Light::Light(float position[4], float ambient[4], float diffuse[4], float specular[4], bool enabled)

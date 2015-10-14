@@ -99,6 +99,17 @@ ARCamera arcamera;
 
 Light light1, light2;
 
+//this is just for testing bezier surfaces
+#include "BezierPatch.h"
+
+const string PATCH_FILE = "patchpoints.csv";
+
+BezierPatch patch;
+BezierCurve track;
+
+
+//end bezier testing
+
 
 // getRand() ///////////////////////////////////////////////////////////////////
 //
@@ -137,6 +148,10 @@ void drawGrid() {
 	}
 	//end glBegin(GL_Lines);
 	glEnd();
+    
+
+    
+    
 	/*
 	*	As noted above, we are done drawing with OpenGL Primitives, so we
 	*	must turn lighting back on.
@@ -325,6 +340,8 @@ void renderScene(void) {
 	else arcamera.lookAt();
 	
 	drawGrid();
+    patch.draw(1000);
+    //track.draw(1);
 	
 	glPushMatrix(); {
 		glTranslatef(chars[0].getX(), chars[0].getY(), chars[0].getZ());		// X, Y and Z position
@@ -355,6 +372,7 @@ void renderScene2(void) {
 	0, 1, 0);
 	
 	drawGrid();
+    
 	
 	for(int i=0;i<3;i++)
 		chars[i].draw();
@@ -632,6 +650,12 @@ bool loadControlPoints( char* filename ) {
 ////////////////////////////////////////////////////////////////////////////////
 int main( int argc, char **argv ) {
 
+    loadControlPoints("patchpoints.csv");
+    patch.setControlPoints(controlPoints);
+    
+    //loadControlPoints("trackpoints.csv");
+    //track.setControlPoints(controlPoints);
+    
     // TODO #03: make sure a control point CSV file was passed in.  Then read the points from file
 	//make sure on argument was passed in.
 	if (argc == 2) {
@@ -674,6 +698,11 @@ int main( int argc, char **argv ) {
 	glutHideWindow();
 	
 	glutSetWindow( winMain );
+    
+    light1.init();
+    light2.init();
+    
+    
 	
     // and enter the GLUT loop, never to exit.
     glutMainLoop();
