@@ -161,6 +161,23 @@ void drawGrid() {
 	*/
 }
 
+void drawTrack() {
+	for(int i =0; i < trackCurvePoints.size(); i++) {
+		float col[4] = { .30, .30, 1.0, 1.0 };
+		Material m = Material(col);
+		m.applyMaterial();
+        glPushMatrix();
+        glTranslatef(trackCurvePoints[i].getX(), trackCurvePoints[i].getY(), trackCurvePoints[i].getZ());
+        GLUquadric *quad;
+        quad = gluNewQuadric();
+        gluQuadricDrawStyle( quad, GLU_FILL);
+        
+        glutSolidCube( 1 );
+        gluDeleteQuadric(quad);
+        glPopMatrix();
+    }
+}
+
 void drawTrees() {
 	for(int i=0; i< objectPoints.size();i++) {
 		Tree t = Tree(objectPoints[i]);
@@ -349,15 +366,13 @@ void renderScene(void) {
 	if( freecamON )
 		camera.lookAt();
 	else arcamera.lookAt();
-	
 	glDisable(GL_LIGHTING);
 	drawGrid();
 	patch.draw(100);
     track.draw(0);
 	glEnable(GL_LIGHTING);
-
-    
-
+	
+	
 	
 	glPushMatrix(); {
 		glTranslatef(chars[0].getX(), chars[0].getY(), chars[0].getZ());		// X, Y and Z position
@@ -365,17 +380,10 @@ void renderScene(void) {
 		light2.spotlight();
 	}; glPopMatrix();
 	
-	chars[1].setX(trackCurvePoints[curveIt1].getX());
-	chars[1].setY(trackCurvePoints[curveIt1].getY()+2);
-	chars[1].setZ(trackCurvePoints[curveIt1].getZ());
-	
-	chars[2].setX(trackCurvePointsArcLength[curveIt2].getX());
-	chars[2].setY(trackCurvePointsArcLength[curveIt2].getY()+2);
-	chars[2].setZ(trackCurvePointsArcLength[curveIt2].getZ());
-	
 	for(int i=0;i<3;i++)
 		chars[i].draw();
 	
+	drawTrack();
 	drawTrees();
 	
 	updateFPS();
@@ -403,6 +411,8 @@ void renderScene2(void) {
     track.draw(0);
 	glEnable(GL_LIGHTING);
 	
+	
+	
 	glPushMatrix(); {
 		glTranslatef(chars[0].getX(), chars[0].getY(), chars[0].getZ());		// X, Y and Z position
 		glRotatef(-chars[0].getTheta() + 90, 0, 1, 0);
@@ -412,6 +422,7 @@ void renderScene2(void) {
 	for(int i=0;i<3;i++)
 		chars[i].draw();
 	
+	drawTrack();
 	drawTrees();
 	
 	glutSwapBuffers();
@@ -496,10 +507,21 @@ void normalKeysDown(unsigned char key, int x, int y) {
 void myTimer( int value ) {
 	curveIt1++;
 	if(curveIt1 >= trackCurvePoints.size())
-		curveIt1 = 0;
+		curveIt1 = 1;
 	curveIt2++;
 	if(curveIt2 >= trackCurvePointsArcLength.size())
-		curveIt2 = 0;
+		curveIt2 = 1;
+	
+	if(curveIt1%400 == 0)
+		chars[1].setTheta(chars[1].getTheta()-90);
+	
+	chars[1].setX(trackCurvePoints[curveIt1].getX());
+	chars[1].setY(trackCurvePoints[curveIt1].getY()+2.5);
+	chars[1].setZ(trackCurvePoints[curveIt1].getZ());
+	
+	chars[2].setX(trackCurvePointsArcLength[curveIt2].getX());
+	chars[2].setY(trackCurvePointsArcLength[curveIt2].getY()+2.5);
+	chars[2].setZ(trackCurvePointsArcLength[curveIt2].getZ());
 	
 	for(int i=0;i<3;i++) {
 		chars[i].incrementEyeTheta();
