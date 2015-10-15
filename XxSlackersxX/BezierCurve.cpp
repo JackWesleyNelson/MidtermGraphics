@@ -54,11 +54,14 @@ void BezierCurve::calculateCurvePointsArcLength(float ds) {
     tarcLengthTable.push_back(std::make_pair(0, 0));
     
     std::pair<float, float> pair;
+    float x;
+    float y;
+    
     for (int i = 1; i < curvePoints.size(); ++i) {
-        pair.first = u;
-        pair.second = (distance(curvePoints[i - 1], curvePoints[i])) + tarcLengthTable[i - 1].second;
+        x = u;
+        y = (distance(curvePoints[i - 1], curvePoints[i])) + tarcLengthTable[i - 1].second;
         
-        tarcLengthTable.push_back(pair);
+        tarcLengthTable.push_back(std::make_pair(x,y));
         u += du;
     }
     
