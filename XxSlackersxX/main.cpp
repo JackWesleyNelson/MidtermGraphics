@@ -68,6 +68,8 @@ using namespace std;
 #include "Material.h"
 #include "Character.h"
 #include "Light.h"
+#include "BezierCurve.h"
+#include "BezierPatch.h"
 // GLOBAL VARIABLES ////////////////////////////////////////////////////////////
 
 static size_t windowWidth = 640;
@@ -90,6 +92,9 @@ float frameTime, fps=0, base_time=0, frames=0;	// for FPS counter
 GLint menuId;				    // handle for our menu
 
 vector<Point> controlPoints;
+vector<Point> trackPoints;
+vector<Point> objectPoints;
+
 float trackPointVal = 0.0f;
 Camera camera;
 Character chars[3];
@@ -341,7 +346,7 @@ void renderScene(void) {
 	
 	drawGrid();
     patch.draw(1000);
-    //track.draw(1);
+    track.draw(1000);
 	
 	glPushMatrix(); {
 		glTranslatef(chars[0].getX(), chars[0].getY(), chars[0].getZ());		// X, Y and Z position
@@ -372,6 +377,8 @@ void renderScene2(void) {
 	0, 1, 0);
 	
 	drawGrid();
+	patch.draw(1000);
+    track.draw(1000);
     
 	
 	for(int i=0;i<3;i++)
@@ -599,15 +606,15 @@ void registerCallbacks() {
 //  Load our control points from file and store them in a global variable.
 //
 ////////////////////////////////////////////////////////////////////////////////
-bool loadControlPoints( char* filename ) {
-	// TODO #04: read in control points from file.  Make sure the file can be
-	// opened and handle it appropriately.
+vector<Point> loadControlPoints( char* filename ) {
 	//start the file stream
 	fstream file;
 	//open the points file
 	file.open(filename);
 	//make a string to store each line
 	string currentLine;
+	//create temporary vector
+	vector<Point> temp;
 	//check that the file is open
 	if (file.is_open()) {
 		//get the first line
@@ -630,7 +637,7 @@ bool loadControlPoints( char* filename ) {
 			third = currentLine;
 			currentLine = "";
 			//push a Point to the vector, converting each string to a float.
-			controlPoints.push_back(Point(atof(first.c_str()), atof(second.c_str()), atof(third.c_str())));
+			temp.push_back(Point(atof(first.c_str()), atof(second.c_str()), atof(third.c_str())));
 		}
 		//close the file
 		file.close();
@@ -639,7 +646,7 @@ bool loadControlPoints( char* filename ) {
 	else {
 		fprintf(stdout, "Unable to open file.");
 	}
-	return true;
+	return temp;
 }
 
 // main() //////////////////////////////////////////////////////////////////////
@@ -650,9 +657,13 @@ bool loadControlPoints( char* filename ) {
 ////////////////////////////////////////////////////////////////////////////////
 int main( int argc, char **argv ) {
 
-    loadControlPoints("patchpoints.csv");
+    controlPoints = loadControlPoints("patchpoints.csv");
     patch.setControlPoints(controlPoints);
-    
+	trackPoints = loadControlPoints("trackpoints.csv");
+    track.setControlPoints(trackPoints);
+    objectPoints = loadControlPoints("objectPoints.csv");
+	
+	
     //loadControlPoints("trackpoints.csv");
     //track.setControlPoints(controlPoints);
     
