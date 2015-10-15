@@ -8,6 +8,8 @@
 
 #include "BezierCurve.h"
 #include <cmath>
+#include <iostream>
+using namespace std;
 
 using std::vector;
 
@@ -62,10 +64,10 @@ void BezierCurve::connectPoints(const int resolution) {
 		glBegin( GL_LINE_STRIP );{
 			Point pb;
 			float j;
-        for(int i=0; i<controlPoints.size()-2; i++)
+        for(int i=0; i<controlPoints.size()-2; i+=3)
 		{
 			vector<Point> temp;
-			for(int j=0;j<3;j++) {
+			for(int j=0;j<4;j++) {
 				Point t = controlPoints[i+j];
 				temp.push_back(Point(t.getX(), t.getY(), t.getZ()));
 			}
