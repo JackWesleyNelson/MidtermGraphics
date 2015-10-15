@@ -115,7 +115,7 @@ void Character::drawName() {
 	//char scrtext[64] = "Zilch";
 
 	// choose a colour
-	materialGreen.applyMaterial();
+	glColor3f( 0, 1, 0);
 	glPushMatrix();
 	// where we want it written
 	glRotatef(90, 0, 1, 0);
