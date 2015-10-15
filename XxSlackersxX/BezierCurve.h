@@ -64,6 +64,10 @@ int factorial(const int n);
 Point evaluateCurveTerm(const Point& p, const float u, const int i);
 Point evaluateCurve(const std::vector<Point>& points, const float u);
 Point evaluateCurve(Point p0, Point p1, Point p2, Point p3, float t);
+std::vector<BezierCurve> makeCurves(std::vector<Point> points);
+void drawCurves(std::vector<BezierCurve> curves);
+std::vector<Point> getAllCurvePoints(std::vector<BezierCurve> curves);
+std::vector<Point> getAllCurvePointsArcLength(std::vector<BezierCurve> curves);
 
 
 #endif /* BezierCurve_h */

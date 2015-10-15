@@ -19,7 +19,7 @@ BezierCurve::BezierCurve(const vector<Point>& controlPoints) {
 }
 
 BezierCurve::BezierCurve() {
-    
+    du = 0.01;
 }
 
 void BezierCurve::setControlPoints(const std::vector<Point> points) {
@@ -30,31 +30,35 @@ const vector<Point>& BezierCurve::getCurvePoints() {
     return curvePoints;
 }
 
+const std::vector<Point>& BezierCurve::getCurvePointsArcLength() {
+    return curvePointsArcLength;
+}
+
 void BezierCurve::calculateCurvePoints() {
     Point curvePoint;
     
-    for(int i = 0; i < controlPoints.size() - 2; i += 3) {
-        for (float u = 0; u <= 1; u += du) {
-            curvePoint = evaluateCurve(controlPoints[i], controlPoints[i+1], controlPoints[i+2], controlPoints[i+3], u);
-            curvePoints.push_back(curvePoint);
-        }
+    for (float u = 0; u <= 1; u += du) {
+        curvePoint = evaluateCurve(controlPoints[0], controlPoints[1], controlPoints[2], controlPoints[3], u);
+        curvePoints.push_back(curvePoint);
     }
+    
 }
 
 
 void BezierCurve::calculateCurvePointsArcLength(float ds) {
     float u = 0;
-    
 
     
     vector<std::pair<float, float>> tarcLengthTable;
     
     tarcLengthTable.push_back(std::make_pair(0, 0));
     
+    std::pair<float, float> pair;
     for (int i = 1; i < curvePoints.size(); ++i) {
-        tarcLengthTable[i].first = u;
-        tarcLengthTable[i].second = (distance(curvePoints[i - 1], curvePoints[i])) + tarcLengthTable[i - 1].second;
+        pair.first = u;
+        pair.second = (distance(curvePoints[i - 1], curvePoints[i])) + tarcLengthTable[i - 1].second;
         
+        tarcLengthTable.push_back(pair);
         u += du;
     }
     
@@ -81,11 +85,9 @@ void BezierCurve::calculateCurvePointsArcLength(float ds) {
     Point curvePoint;
     
     //calculate points using t values
-    for(int i = 0; i < controlPoints.size() - 2; i += 3) {
-        for (float u = 0; u <= 1; u += du) {
-            curvePoint = evaluateCurve(controlPoints[i], controlPoints[i+1], controlPoints[i+2], controlPoints[i+3], u);
-            curvePointsArcLength.push_back(curvePoint);
-        }
+    for (auto t : tValues) {
+        curvePoint = evaluateCurve(controlPoints[0], controlPoints[1], controlPoints[2], controlPoints[3], t);
+        curvePointsArcLength.push_back(curvePoint);
     }
 }
 
@@ -221,6 +223,63 @@ int factorial(const int n) {
     if (n <= 1) return 1;
     
     return n * factorial(n - 1);
+}
+
+vector<BezierCurve> makeCurves(vector<Point> points) {
+    vector<BezierCurve> curves;
+    BezierCurve curve;
+    vector<Point> controlPoints;
+    
+    for(int i = 0; i < points.size() - 2; i += 3) {
+        controlPoints.push_back(points[i]);
+        controlPoints.push_back(points[i+1]);
+        controlPoints.push_back(points[i+2]);
+        controlPoints.push_back(points[i+3]);
+        
+        curve.setControlPoints(controlPoints);
+        curve.calculateCurvePoints();
+        curve.calculateCurvePointsArcLength(1);
+        controlPoints.clear();
+        
+        curves.push_back(curve);
+    }
+    
+    return curves;
+}
+
+void drawCurves(vector<BezierCurve> curves) {
+    for (auto curve : curves) {
+        curve.draw(0);
+    }
+}
+
+vector<Point> getAllCurvePoints(vector<BezierCurve> curves) {
+    vector<Point> points;
+    
+    int numElements = 0;
+    
+    for (auto curve : curves) {
+        numElements += curve.getCurvePoints().size();
+        points.reserve(numElements);
+        points.insert(points.end(), curve.getCurvePoints().begin(), curve.getCurvePoints().end());
+        
+    }
+    
+    return points;
+}
+vector<Point> getAllCurvePointsArcLength(vector<BezierCurve> curves) {
+    vector<Point> points;
+    
+    int numElements = 0;
+    
+    for (auto curve : curves) {
+        numElements += curve.getCurvePoints().size();
+        points.reserve(numElements);
+        points.insert(points.end(), curve.getCurvePointsArcLength().begin(), curve.getCurvePointsArcLength().end());
+        
+    }
+    
+    return points;
 }
 
 // =================================
