@@ -95,7 +95,7 @@ void BezierCurve::draw(const int resolution) {
     glPushMatrix();
     glColor3f(1, 0, 0);
     glBegin(GL_LINE_STRIP);
-    for (vector<Point>::iterator iter = controlPoints.begin(); iter != controlPoints.end(); ++iter) {
+    for (vector<Point>::iterator iter = curvePoints.begin(); iter != curvePoints.end(); ++iter) {
         glVertex3f( iter->getX(), iter->getY(), iter->getZ() );
     }
     glEnd();
