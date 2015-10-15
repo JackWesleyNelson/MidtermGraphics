@@ -46,29 +46,38 @@ void BezierCurve::drawPoints() {
 
 void BezierCurve::connectPoints(const int resolution) {
     // Connect our control points
-    glColor3f(1,1,0);
-    glPushMatrix();
-    glLineWidth( 3.0 );
-    glBegin( GL_LINE_STRIP ); {
-        for(int i =0; i<controlPoints.size(); i++) {
-            glVertex3f( controlPoints[i].getX(), controlPoints[i].getY(), controlPoints[i].getZ() );
-        }
-    }; glEnd();
-    glPopMatrix();
     
-    glPushMatrix();
-    glBegin( GL_LINE_STRIP );{
-        Point pb;
-        float j;
-        
-        for(int i=0; i <= resolution; i++) {
-            j = i;
-            j /= resolution;
-            pb = evaluateCurve(controlPoints, j);
-            glVertex3f( pb.getX(), pb.getY(), pb.getZ() );
-        }
-    }; glEnd();
-    glPopMatrix();
+    glPushMatrix(); {
+		glColor3f(1,1,0);
+		glLineWidth( 3.0 );
+		glBegin( GL_LINE_STRIP ); {
+			for(int i =0; i<controlPoints.size(); i++) {
+				glVertex3f( controlPoints[i].getX(), controlPoints[i].getY(), controlPoints[i].getZ() );
+			}
+		}; glEnd();
+    } glPopMatrix();
+    
+    glPushMatrix(); {
+		glColor3f(0,0,1);
+		glBegin( GL_LINE_STRIP );{
+			Point pb;
+			float j;
+        for(int i=0; i<controlPoints.size()-2; i++)
+		{
+			vector<Point> temp;
+			for(int j=0;j<3;j++) {
+				Point t = controlPoints[i+j];
+				temp.push_back(Point(t.getX(), t.getY(), t.getZ()));
+			}
+			for(int i=0; i <= resolution; i++) {
+				j = i;
+				j /= resolution;
+				pb = evaluateCurve(temp, j);
+				glVertex3f( pb.getX(), pb.getY(), pb.getZ() );
+			}
+		}
+		}; glEnd();
+    } glPopMatrix();
 }
 
 // =======================

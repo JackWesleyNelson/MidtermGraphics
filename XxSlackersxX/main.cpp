@@ -104,12 +104,7 @@ ARCamera arcamera;
 
 Light light1, light2;
 
-//this is just for testing bezier surfaces
-#include "BezierPatch.h"
-
-const string PATCH_FILE = "patchpoints.csv";
-
-BezierPatch patch;
+//BezierPatch patch;
 BezierCurve track;
 
 
@@ -137,7 +132,6 @@ void drawGrid() {
 	*	Primitive - like a line, quad, point - we need to disable lighting
 	*	and then reenable it for use with the GLUT 3D Primitives.
 	*/
-	glDisable(GL_LIGHTING);
 	//Set primitive to lines
 	glBegin(GL_LINES);
 	//set color to white
@@ -161,7 +155,6 @@ void drawGrid() {
 	*	As noted above, we are done drawing with OpenGL Primitives, so we
 	*	must turn lighting back on.
 	*/
-	glEnable(GL_LIGHTING);
 }
 
 //Modifies the FPS variable and displays it onscreen
@@ -344,9 +337,11 @@ void renderScene(void) {
 		camera.lookAt();
 	else arcamera.lookAt();
 	
+	glDisable(GL_LIGHTING);
 	drawGrid();
-    patch.draw(1000);
+    //patch.draw(1000);
     track.draw(1000);
+	glEnable(GL_LIGHTING);
 	
 	glPushMatrix(); {
 		glTranslatef(chars[0].getX(), chars[0].getY(), chars[0].getZ());		// X, Y and Z position
@@ -376,9 +371,11 @@ void renderScene2(void) {
 	fpX, chars[charIt2].getY()+.6, fpZ,
 	0, 1, 0);
 	
+	glDisable(GL_LIGHTING);
 	drawGrid();
-	patch.draw(1000);
+    //patch.draw(1000);
     track.draw(1000);
+	glEnable(GL_LIGHTING);
     
 	
 	for(int i=0;i<3;i++)
@@ -657,10 +654,11 @@ vector<Point> loadControlPoints( char* filename ) {
 ////////////////////////////////////////////////////////////////////////////////
 int main( int argc, char **argv ) {
 
-    controlPoints = loadControlPoints("patchpoints.csv");
-    patch.setControlPoints(controlPoints);
+    //controlPoints = loadControlPoints("patchpoints.csv");
+    //patch.setControlPoints(controlPoints);
 	trackPoints = loadControlPoints("trackpoints.csv");
     track.setControlPoints(trackPoints);
+	cout << trackPoints[0].getX() << endl;
     objectPoints = loadControlPoints("objectPoints.csv");
 	
 	
@@ -668,14 +666,15 @@ int main( int argc, char **argv ) {
     //track.setControlPoints(controlPoints);
     
     // TODO #03: make sure a control point CSV file was passed in.  Then read the points from file
+    // TODO #03: make sure a control point CSV file was passed in.  Then read the points from file
 	//make sure on argument was passed in.
-	if (argc == 2) {
+	/*if (argc == 2) {
 		loadControlPoints(argv[1]);
 	}
 	else {
 		fprintf(stdout, "Please provide a csv file.\n");
 		exit(-1);
-	}
+	}*/
     // create a double-buffered GLUT window at (50, 50) with predefined window size
     glutInit( &argc, argv );
     glutInitDisplayMode( GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGB );
