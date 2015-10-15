@@ -85,8 +85,8 @@ void BezierCurve::calculateCurvePointsArcLength(float ds) {
     Point curvePoint;
     
     //calculate points using t values
-    for (auto t : tValues) {
-        curvePoint = evaluateCurve(controlPoints[0], controlPoints[1], controlPoints[2], controlPoints[3], t);
+    for (vector<float>::iterator iter = tValues.begin(); iter != tValues.end(); ++iter) {
+        curvePoint = evaluateCurve(controlPoints[0], controlPoints[1], controlPoints[2], controlPoints[3], *iter);
         curvePointsArcLength.push_back(curvePoint);
     }
 }
@@ -95,8 +95,8 @@ void BezierCurve::draw(const int resolution) {
     glPushMatrix();
     glColor3f(1, 0, 0);
     glBegin(GL_LINE_STRIP);
-    for (auto p : curvePoints) {
-        glVertex3f( p.getX(), p.getY(), p.getZ() );
+    for (vector<Point>::iterator iter = controlPoints.begin(); iter != controlPoints.end(); ++iter) {
+        glVertex3f( iter->getX(), iter->getY(), iter->getZ() );
     }
     glEnd();
     glPopMatrix();
@@ -248,8 +248,8 @@ vector<BezierCurve> makeCurves(vector<Point> points) {
 }
 
 void drawCurves(vector<BezierCurve> curves) {
-    for (auto curve : curves) {
-        curve.draw(0);
+    for (vector<BezierCurve>::iterator iter = curves.begin(); iter != curves.end(); ++iter) {
+        iter->draw(0);
     }
 }
 
@@ -258,10 +258,10 @@ vector<Point> getAllCurvePoints(vector<BezierCurve> curves) {
     
     int numElements = 0;
     
-    for (auto curve : curves) {
-        numElements += curve.getCurvePoints().size();
+    for (vector<BezierCurve>::iterator iter = curves.begin(); iter != curves.end(); ++iter) {
+        numElements +=  iter->getCurvePoints().size();
         points.reserve(numElements);
-        points.insert(points.end(), curve.getCurvePoints().begin(), curve.getCurvePoints().end());
+        points.insert(points.end(), iter->getCurvePoints().begin(), iter->getCurvePoints().end());
         
     }
     
@@ -272,10 +272,10 @@ vector<Point> getAllCurvePointsArcLength(vector<BezierCurve> curves) {
     
     int numElements = 0;
     
-    for (auto curve : curves) {
-        numElements += curve.getCurvePoints().size();
+    for (vector<BezierCurve>::iterator iter = curves.begin(); iter != curves.end(); ++iter) {
+        numElements += iter->getCurvePoints().size();
         points.reserve(numElements);
-        points.insert(points.end(), curve.getCurvePointsArcLength().begin(), curve.getCurvePointsArcLength().end());
+        points.insert(points.end(), iter->getCurvePointsArcLength().begin(), iter->getCurvePointsArcLength().end());
         
     }
     
