@@ -12,7 +12,7 @@ BezierPatch::BezierPatch() {
 }
 
 void BezierPatch::draw(const int resolution) {
-    //drawPoints();
+    drawPoints();
     //connectPoints(resolution);
     float u = 0;
     float v = 0;
@@ -39,7 +39,7 @@ void BezierPatch::draw(const int resolution) {
     glPushMatrix();
     glColor3f(.8, 0, 0);
 
-    glBegin(GL_QUAD_STRIP);
+    
     Point p;
     Point pU;
     Point pV;
@@ -52,15 +52,15 @@ void BezierPatch::draw(const int resolution) {
             pUV = surfacePoints[i + 1][j + 1];
             pV = surfacePoints[i][j+1];
             
-           
+            glBegin(GL_QUADS);
             glVertex3f(p.getX(), p.getY(), p.getZ());
             glVertex3f(pU.getX(), pU.getY(), pU.getZ());
             glVertex3f(pUV.getX(), pUV.getY(), pUV.getZ());
             glVertex3f(pV.getX(), pV.getY(), pV.getZ());
-            
+            glEnd();
         }
     }
-    glEnd();
+    
     glPopMatrix();
     
     
