@@ -340,8 +340,8 @@ void renderScene(void) {
 	else arcamera.lookAt();
 	
 	drawGrid();
-    patch.draw(1000);
-    //track.draw(1);
+    //patch.draw(1000);
+    track.draw(100);
 	
 	glPushMatrix(); {
 		glTranslatef(chars[0].getX(), chars[0].getY(), chars[0].getZ());		// X, Y and Z position
@@ -650,11 +650,11 @@ bool loadControlPoints( char* filename ) {
 ////////////////////////////////////////////////////////////////////////////////
 int main( int argc, char **argv ) {
 
-    loadControlPoints("patchpoints.csv");
-    patch.setControlPoints(controlPoints);
+    //loadControlPoints("patchpoints.csv");
+    //patch.setControlPoints(controlPoints);
     
-    //loadControlPoints("trackpoints.csv");
-    //track.setControlPoints(controlPoints);
+    loadControlPoints("trackpoints.csv");
+    track.setControlPoints(controlPoints);
     
     // TODO #03: make sure a control point CSV file was passed in.  Then read the points from file
 	//make sure on argument was passed in.

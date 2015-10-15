@@ -19,8 +19,6 @@ public:
     
     void setControlPoints(const std::vector<Point> points);
     
-    const int NUM_CONTROL_POINTS = 16;
-    
 private:
     Point evaluate();
     float u;

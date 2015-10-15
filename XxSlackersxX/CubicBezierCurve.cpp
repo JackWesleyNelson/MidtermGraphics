@@ -22,7 +22,11 @@ CubicBezierCurve::CubicBezierCurve() {
     
 }
 
+
 void CubicBezierCurve::draw(const int resolution) {
+    if (!curvePoints.empty())
+        curvePoints.clear();
+    
     glColor3f(0,1,0);
     for(int i =0; i < controlPoints.size(); i++) {
         glPushMatrix();
@@ -64,6 +68,7 @@ void CubicBezierCurve::render(Point p0, Point p1, Point p2, Point p3, int resolu
             j = i;
             j /= resolution;
             pb = evaluateBezier( p0, p1, p2, p3, j);
+            curvePoints.push_back(pb);
             glVertex3f( pb.getX(), pb.getY(), pb.getZ() );
         }
     }; glEnd();

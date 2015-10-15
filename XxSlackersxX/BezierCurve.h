@@ -39,16 +39,22 @@ public:
     
     void draw(const int resolution);
     void drawPoints();
+    void render(const Point p0, const Point p1, const Point p2, const Point p3,const int resolution);
     void connectPoints(const int resolution);
+    
+    const std::vector<Point>& getCurvePoints();
     
 private:
     
     std::vector<Point> controlPoints;
+    std::vector<Point> curvePoints;
 };
 
 float bezierBasis(const int i, const float u);
 int factorial(const int n);
 Point evaluateCurveTerm(const Point& p, const float u, const int i);
 Point evaluateCurve(const std::vector<Point>& points, const float u);
+Point evaluateCurve(Point p0, Point p1, Point p2, Point p3, float t);
+
 
 #endif /* BezierCurve_h */

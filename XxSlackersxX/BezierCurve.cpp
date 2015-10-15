@@ -24,12 +24,40 @@ void BezierCurve::setControlPoints(const std::vector<Point> points) {
     this->controlPoints = points;
 }
 
+const vector<Point>& BezierCurve::getCurvePoints() {
+    return curvePoints;
+}
+
 void BezierCurve::draw(const int resolution) {
-    drawPoints();
-    connectPoints(resolution);
+    //drawPoints();
+    
+    int count = 0;
+    vector<Point> points;
+    
+   	for(int i = 0; i<controlPoints.size()-2; i+=3) {
+        render(controlPoints[i], controlPoints[i+1], controlPoints[i+2], controlPoints[i+3], resolution);
+    }
+
+}
+
+void BezierCurve::render(const Point p0, const Point p1, const Point p2, const Point p3, const int resolution) {
+    glPushMatrix();
+    glColor3f(1, 0, 0);
+    glBegin( GL_LINE_STRIP );{
+        for(int i=0; i <= resolution; i++) {
+            float j = i;
+            j /= resolution;
+            Point pb = evaluateCurve( p0, p1, p2, p3, j);
+            glVertex3f( pb.getX(), pb.getY(), pb.getZ() );
+        }
+    }; glEnd();
+    glPopMatrix();
 }
 
 void BezierCurve::drawPoints() {
+    if (!curvePoints.empty())
+        curvePoints.clear();
+    
     glColor3f(0,1,0);
     for(int i =0; i < controlPoints.size(); i++) {
         glPushMatrix();
@@ -45,17 +73,6 @@ void BezierCurve::drawPoints() {
 }
 
 void BezierCurve::connectPoints(const int resolution) {
-    // Connect our control points
-    glColor3f(1,1,0);
-    glPushMatrix();
-    glLineWidth( 3.0 );
-    glBegin( GL_LINE_STRIP ); {
-        for(int i =0; i<controlPoints.size(); i++) {
-            glVertex3f( controlPoints[i].getX(), controlPoints[i].getY(), controlPoints[i].getZ() );
-        }
-    }; glEnd();
-    glPopMatrix();
-    
     glPushMatrix();
     glBegin( GL_LINE_STRIP );{
         Point pb;
@@ -65,6 +82,7 @@ void BezierCurve::connectPoints(const int resolution) {
             j = i;
             j /= resolution;
             pb = evaluateCurve(controlPoints, j);
+            curvePoints.push_back(pb);
             glVertex3f( pb.getX(), pb.getY(), pb.getZ() );
         }
     }; glEnd();
@@ -88,6 +106,14 @@ Point evaluateCurve(const vector<Point>& points, const float u) {
     }
     
     return p;
+}
+
+Point evaluateCurve( Point p0, Point p1, Point p2, Point p3, float t ) {
+    float b0 = (1-t)*(1-t)*(1-t);
+    float b1 = 3* (1-t)*(1-t)*t;
+    float b2 = 3 * (1-t)*t*t;
+    float b3 = t*t*t;
+    return (b0*p0 + b1*p1 + b2*p2 + b3*p3);
 }
 
 float bezierBasis(const int i, const float u) {
