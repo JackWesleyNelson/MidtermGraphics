@@ -107,7 +107,7 @@ ARCamera arcamera;
 Light light1, light2;
 
 BezierPatch patch;
-vector<BezierCurve> track;
+BezierCurve track;
 vector<Point> trackCurvePoints;
 vector<Point> trackCurvePointsArcLength;
 
@@ -353,7 +353,7 @@ void renderScene(void) {
 	glDisable(GL_LIGHTING);
 	drawGrid();
 	patch.draw(100);
-    drawCurves(track);
+    track.draw(0);
 	glEnable(GL_LIGHTING);
 
     
@@ -400,7 +400,7 @@ void renderScene2(void) {
 	glDisable(GL_LIGHTING);
 	drawGrid();
 	patch.draw(100);
-    drawCurves(track);
+    track.draw(0);
 	glEnable(GL_LIGHTING);
 	
 	glPushMatrix(); {
@@ -694,9 +694,14 @@ int main( int argc, char **argv ) {
     patch.setControlPoints(controlPoints);
     
 	trackPoints = loadControlPoints("trackpoints.csv");
-    track = makeCurves(trackPoints);
-    trackCurvePoints = getAllCurvePoints(track);
-    trackCurvePointsArcLength = getAllCurvePointsArcLength(track);
+    track.setControlPoints(trackPoints);
+    track.calculateCurvePoints();
+    track.calculateCurvePointsArcLength(1);
+    
+    trackCurvePoints = track.getCurvePoints();
+    trackCurvePointsArcLength = track.getCurvePointsArcLength();
+    
+    
 
     objectPoints = loadControlPoints("objectpoints.csv");
 	

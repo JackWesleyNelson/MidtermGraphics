@@ -37,7 +37,7 @@ const std::vector<Point>& BezierCurve::getCurvePointsArcLength() {
 void BezierCurve::calculateCurvePoints() {
     Point curvePoint;
     
-    for(int i = 0; i < curvePoints.size() - 2; i += 3) {
+    for(int i = 0; i < controlPoints.size() - 2; i += 3) {
         for (float u = 0; u <= 1; u += du) {
             curvePoint = evaluateCurve(controlPoints[i], controlPoints[i + 1], controlPoints[i + 2], controlPoints[i + 3], u);
             curvePoints.push_back(curvePoint);
