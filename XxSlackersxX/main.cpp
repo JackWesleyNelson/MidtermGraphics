@@ -69,6 +69,7 @@ using namespace std;
 #include "Character.h"
 #include "Light.h"
 #include "BezierCurve.h"
+#include "Tree.h"
 #include "BezierPatch.h"
 // GLOBAL VARIABLES ////////////////////////////////////////////////////////////
 
@@ -318,7 +319,7 @@ void initScene()  {
 	chars[2] = Character(10, 0,10);
 	chars[2].setColor( 1, .3, .3, 1);
 	chars[2].setName("Thing 2");
-	
+
 	arcamera = ARCamera(chars[charIt].getX(), chars[charIt].getY(), chars[charIt].getZ());
 	arcamera.setTheta(M_PI / 3.0f);
 	arcamera.setPhi(-M_PI / 2.8f);
@@ -356,7 +357,7 @@ void renderScene(void) {
 	
 	for(int i=0;i<3;i++)
 		chars[i].draw();
-	
+
 	updateFPS();
 	
 	//push the back buffer to the screen
@@ -383,7 +384,7 @@ void renderScene2(void) {
 	
 	for(int i=0;i<3;i++)
 		chars[i].draw();
-	
+
 	glPushMatrix(); {
 		glTranslatef(chars[0].getX(), chars[0].getY(), chars[0].getZ());		// X, Y and Z position
 		glRotatef(-chars[0].getTheta() + 90, 0, 1, 0);

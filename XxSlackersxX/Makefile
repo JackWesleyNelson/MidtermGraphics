@@ -1,5 +1,5 @@
 TARGET = MP
-OBJECTS = Main.o Material.o Light.o Point.o Character.o Camera.o ARCamera.o CubicBezierCurve.o BezierPatch.o BezierCurve.o
+OBJECTS = Main.o Material.o Light.o Point.o Character.o Camera.o ARCamera.o CubicBezierCurve.o BezierPatch.o BezierCurve.o Tree.o
 
 CXX    = g++
 CFLAGS = -Wall -g 
@@ -86,3 +86,4 @@ Light.o: Light.cpp Light.h
 CubicBezierCurve.o: CubicBezierCurve.cpp CubicBezierCurve.h
 BezierPatch.o: BezierPatch.cpp BezierPatch.h
 BezierCurve.o: BezierCurve.cpp BezierCurve.h
+Tree.o: Tree.cpp Tree.h
