@@ -41,8 +41,52 @@ void BezierCurve::calculateCurvePoints() {
     }
 }
 
-void BezierCurve::calculateCurvePointsArcLength() {
+
+void BezierCurve::calculateCurvePointsArcLength(float ds) {
+    float u = 0;
     
+
+    
+    vector<std::pair<float, float>> tarcLengthTable;
+    
+    tarcLengthTable.push_back(std::make_pair(0, 0));
+    
+    for (int i = 1; i < curvePoints.size(); ++i) {
+        tarcLengthTable[i].first = u;
+        tarcLengthTable[i].second = (distance(curvePoints[i - 1], curvePoints[i])) + tarcLengthTable[i - 1].second;
+        
+        u += du;
+    }
+    
+    float s = 0;
+    vector<float> tValues;
+    
+    for (int i = 0; i < tarcLengthTable.size(); i++) {
+        if (tarcLengthTable[i].second == s) {
+            tValues.push_back(tarcLengthTable[i].first);
+        }
+        
+        float dt = 0;
+        float t = 0;
+        if (tarcLengthTable[i].second > s) {
+            //linear interpolate between the two values
+            dt = tarcLengthTable[i].first - tarcLengthTable[i - 1].first;
+            t = (((s - tarcLengthTable[i - 1].second) / (tarcLengthTable[i].second - tarcLengthTable[i - 1].second)) * (dt)) +  tarcLengthTable[i - 1].first;
+            
+            tValues.push_back(t);
+        }
+        s += ds;
+    }
+    
+    Point curvePoint;
+    
+    //calculate points using t values
+    for(int i = 0; i < controlPoints.size() - 2; i += 3) {
+        for (float u = 0; u <= 1; u += du) {
+            curvePoint = evaluateCurve(controlPoints[i], controlPoints[i+1], controlPoints[i+2], controlPoints[i+3], u);
+            curvePointsArcLength.push_back(curvePoint);
+        }
+    }
 }
 
 void BezierCurve::draw(const int resolution) {

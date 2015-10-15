@@ -28,6 +28,7 @@
 
 #include <vector>
 #include <cmath>
+#include <map>
 #include "Point.h"
 
 class BezierCurve {
@@ -55,6 +56,7 @@ private:
     std::vector<Point> controlPoints;
     std::vector<Point> curvePoints;
     std::vector<Point> curvePointsArcLength;
+    std::map<float, float> arcLengthTable;
 };
 
 float bezierBasis(const int i, const float u);

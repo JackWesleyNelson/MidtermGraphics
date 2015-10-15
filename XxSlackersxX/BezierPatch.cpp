@@ -22,51 +22,45 @@ void BezierPatch::draw(const int resolution) {
     float du = 0.01;
     float dv = 0.01;
     
-    vector<Point> surfacePoints;
+    Point surfacePoints[100][100];
     
-    while (u < 1.0 && v < 1.0) {
-        Point p0 = evaluateCurve(controlPoints[0], controlPoints[1], controlPoints[2], controlPoints[3], u);
-        Point p1 = evaluateCurve(controlPoints[4], controlPoints[5], controlPoints[6], controlPoints[7], u);
-        Point p2 = evaluateCurve(controlPoints[8], controlPoints[9], controlPoints[10], controlPoints[11], u);
-        Point p3 = evaluateCurve(controlPoints[12], controlPoints[13], controlPoints[14], controlPoints[15], u);
-    
-        Point pSurface = evaluateCurve(p0, p1, p2, p3, v);
-        
-        surfacePoints.push_back(pSurface);
-        
-        if (surfacePoints.size() == 4) {
+    for (u = 0; u <= 1; u += du) {
+        for (v = 0; v <= 1; v += dv) {
+            Point p0 = evaluateCurve(controlPoints[0], controlPoints[1], controlPoints[2], controlPoints[3], u);
+            Point p1 = evaluateCurve(controlPoints[4], controlPoints[5], controlPoints[6], controlPoints[7], u);
+            Point p2 = evaluateCurve(controlPoints[8], controlPoints[9], controlPoints[10], controlPoints[11], u);
+            Point p3 = evaluateCurve(controlPoints[12], controlPoints[13], controlPoints[14], controlPoints[15], u);
             
+            Point pSurface = evaluateCurve(p0, p1, p2, p3, v);
             
-            for(int i =0; i < surfacePoints.size(); i++) {
-                glPushMatrix();
-                glColor3f(1, 0, 0);
-                glTranslatef(surfacePoints[i].getX(), surfacePoints[i].getY(), surfacePoints[i].getZ());
-                GLUquadric *quad;
-                quad = gluNewQuadric();
-                gluQuadricDrawStyle( quad, GLU_FILL);
-                
-                gluSphere(quad, .2, 10, 10);
-                gluDeleteQuadric(quad);
-                glPopMatrix();
-            }
-            
-            
-            
-            glBegin(GL_QUADS);
-            for (int i = 0; i < surfacePoints.size(); ++i) {
-                //glVertex3f(surfacePoints[i].getX(), surfacePoints[i].getY(), surfacePoints[i].getZ());
-
-            }
-            glEnd();
-
-            
-            
-            surfacePoints.clear();
+            surfacePoints[(int)(u * du)][(int)(v * dv)] = pSurface;
         }
-        
-        u += du;
-        v += dv;
     }
+    
+    glPushMatrix();
+    glBegin(GL_QUAD_STRIP);
+    Point p;
+    Point pU;
+    Point pV;
+    Point pUV;
+    
+    for (int i = 0; i < 99; ++i) {
+        for (int j = 0; j < 99; ++j) {
+            p = surfacePoints[i][j];
+            pU = surfacePoints[i + 1][j];
+            pUV = surfacePoints[i + 1][j + 1];
+            pV = surfacePoints[i][j+1];
+            
+            glVertex3f(p.getX(), p.getY(), p.getZ());
+            glVertex3f(pU.getX(), pU.getY(), pU.getZ());
+            glVertex3f(pUV.getX(), pUV.getY(), pUV.getZ());
+            glVertex3f(pV.getX(), pV.getY(), pV.getZ());
+        }
+    }
+    glEnd();
+    glPopMatrix();
+    
+    
     
 }
 
