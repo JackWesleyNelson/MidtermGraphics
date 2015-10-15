@@ -37,10 +37,13 @@ const std::vector<Point>& BezierCurve::getCurvePointsArcLength() {
 void BezierCurve::calculateCurvePoints() {
     Point curvePoint;
     
-    for (float u = 0; u <= 1; u += du) {
-        curvePoint = evaluateCurve(controlPoints[0], controlPoints[1], controlPoints[2], controlPoints[3], u);
-        curvePoints.push_back(curvePoint);
+    for(int i = 0; i < curvePoints.size() - 2; i += 3) {
+        for (float u = 0; u <= 1; u += du) {
+            curvePoint = evaluateCurve(controlPoints[i], controlPoints[i + 1], controlPoints[i + 2], controlPoints[i + 3], u);
+            curvePoints.push_back(curvePoint);
+        }
     }
+
     
 }
 
@@ -99,8 +102,24 @@ void BezierCurve::calculateCurvePointsArcLength(float ds) {
     Point curvePoint;
     
     //calculate points using t values
+
+    
+    float tVal = 0;
+    
     for (vector<float>::iterator iter = tValues.begin(); iter != tValues.end(); ++iter) {
-        curvePoint = evaluateCurve(controlPoints[0], controlPoints[1], controlPoints[2], controlPoints[3], *iter);
+        tVal = *iter;
+        int curveN = (int) tVal;
+        
+        
+        if (curveN == 0) {
+            curvePoint = evaluateCurve(controlPoints[0], controlPoints[1], controlPoints[2], controlPoints[3], *iter);
+        }
+        else {
+            //finding the right indices of the control points
+            curveN *= 3;
+            curvePoint = evaluateCurve(controlPoints[curveN], controlPoints[curveN + 1], controlPoints[curveN + 2], controlPoints[curveN + 3], *iter);
+        
+        }
         curvePointsArcLength.push_back(curvePoint);
     }
 }
