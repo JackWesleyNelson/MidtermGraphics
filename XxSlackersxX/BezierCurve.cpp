@@ -49,7 +49,7 @@ void BezierCurve::calculateCurvePointsArcLength(float ds) {
     float u = 0;
 
     
-    vector<std::pair<float, float>> tarcLengthTable;
+    vector<std::pair<float, float> > tarcLengthTable;
     
     tarcLengthTable.push_back(std::make_pair(0, 0));
     
