@@ -270,6 +270,11 @@ void Character::setX(float x)
 	heroX = x;
 }
 
+void Character::setY(float y)
+{
+	heroY = y;
+}
+
 void Character::setZ(float z)
 {
 	heroZ = z;

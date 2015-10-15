@@ -100,6 +100,7 @@ float trackPointVal = 0.0f;
 Camera camera;
 Character chars[3];
 int charIt = 0, charIt2 = 0;
+int curveIt1 = 0, curveIt2 = 0;
 //Character character1, character2, character3;
 ARCamera arcamera;
 
@@ -318,9 +319,11 @@ void initScene()  {
 	chars[1] = Character(5, 0, 5);
 	chars[1].setColor( .3, .3, 1, 1);
 	chars[1].setName("Dibstix");
+	chars[1].setMoving(true);
 	chars[2] = Character(10, 0,10);
 	chars[2].setColor( 1, .3, .3, 1);
 	chars[2].setName("Thing 2");
+	chars[2].setMoving(true);
 
 	arcamera = ARCamera(chars[charIt].getX(), chars[charIt].getY(), chars[charIt].getZ());
 	arcamera.setTheta(M_PI / 3.0f);
@@ -349,12 +352,11 @@ void renderScene(void) {
 	
 	glDisable(GL_LIGHTING);
 	drawGrid();
-    //patch.draw(1000);
-
+	patch.draw(100);
     drawCurves(track);
 	glEnable(GL_LIGHTING);
 
-    patch.draw(100);
+    
 
 	
 	glPushMatrix(); {
@@ -362,6 +364,14 @@ void renderScene(void) {
 		glRotatef(-chars[0].getTheta() + 90, 0, 1, 0);
 		light2.spotlight();
 	}; glPopMatrix();
+	
+	chars[1].setX(trackCurvePoints[curveIt1].getX());
+	chars[1].setY(trackCurvePoints[curveIt1].getY()+2);
+	chars[1].setZ(trackCurvePoints[curveIt1].getZ());
+	
+	chars[2].setX(trackCurvePointsArcLength[curveIt2].getX());
+	chars[2].setY(trackCurvePointsArcLength[curveIt2].getY()+2);
+	chars[2].setZ(trackCurvePointsArcLength[curveIt2].getZ());
 	
 	for(int i=0;i<3;i++)
 		chars[i].draw();
@@ -389,7 +399,7 @@ void renderScene2(void) {
 	
 	glDisable(GL_LIGHTING);
 	drawGrid();
-    patch.draw(1000);
+	patch.draw(100);
     drawCurves(track);
 	glEnable(GL_LIGHTING);
 	
@@ -484,9 +494,17 @@ void normalKeysDown(unsigned char key, int x, int y) {
 //
 ////////////////////////////////////////////////////////////////////////////////
 void myTimer( int value ) {
-	for(int i=0;i<3;i++) 
+	curveIt1++;
+	if(curveIt1 >= trackCurvePoints.size())
+		curveIt1 = 0;
+	curveIt2++;
+	if(curveIt2 >= trackCurvePointsArcLength.size())
+		curveIt2 = 0;
+	
+	for(int i=0;i<3;i++) {
 		chars[i].incrementEyeTheta();
-	chars[0].positionLimbs();
+		chars[i].positionLimbs();
+	}
 	
 	if(cameraF)
 		camera.moveForward();

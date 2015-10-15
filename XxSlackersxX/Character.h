@@ -33,6 +33,7 @@ public:
 	void setCharacterB(bool state);
 	void setTheta(float angle);
 	void setX(float x);
+	void setY(float y);
 	void setZ(float z);
 	void setColor(float r, float g, float b, float a);
 	void setName(char* n);
