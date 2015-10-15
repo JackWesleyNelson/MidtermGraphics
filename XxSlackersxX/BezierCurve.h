@@ -44,7 +44,7 @@ public:
     void connectPoints(const int resolution);
     
     void calculateCurvePoints();
-    void calculateCurvePointsArcLength();
+    void calculateCurvePointsArcLength(float ds);
     
     const std::vector<Point>& getCurvePoints();
     const std::vector<Point>& getCurvePointsArcLength();

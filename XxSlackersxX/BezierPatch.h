@@ -19,14 +19,8 @@ public:
     
     void setControlPoints(const std::vector<Point> points);
     
-<<<<<<< HEAD
-    
-=======
->>>>>>> track
 private:
     Point evaluate();
-    float u;
-    float v;
     std::vector<Point> controlPoints;
     
     

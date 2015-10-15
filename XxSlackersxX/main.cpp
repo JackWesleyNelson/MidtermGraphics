@@ -105,7 +105,7 @@ ARCamera arcamera;
 
 Light light1, light2;
 
-//BezierPatch patch;
+BezierPatch patch;
 BezierCurve track;
 
 
@@ -346,14 +346,14 @@ void renderScene(void) {
 	else arcamera.lookAt();
 	
 	glDisable(GL_LIGHTING);
-	drawGrid();
-    //patch.draw(1000);
-<<<<<<< HEAD
-    track.draw(1000);
+	//drawGrid();
+    patch.draw(1000);
+
+    //track.draw(1000);
 	glEnable(GL_LIGHTING);
-=======
-    track.draw(100);
->>>>>>> track
+
+    //track.draw(100);
+
 	
 	glPushMatrix(); {
 		glTranslatef(chars[0].getX(), chars[0].getY(), chars[0].getZ());		// X, Y and Z position
@@ -388,7 +388,7 @@ void renderScene2(void) {
 	glDisable(GL_LIGHTING);
 	drawGrid();
     //patch.draw(1000);
-    track.draw(1000);
+    //track.draw(1000);
 	glEnable(GL_LIGHTING);
 	
 	glPushMatrix(); {
@@ -669,9 +669,9 @@ vector<Point> loadControlPoints( char* filename ) {
 ////////////////////////////////////////////////////////////////////////////////
 int main( int argc, char **argv ) {
 
-<<<<<<< HEAD
-    //controlPoints = loadControlPoints("patchpoints.csv");
-    //patch.setControlPoints(controlPoints);
+
+    controlPoints = loadControlPoints("patchpoints.csv");
+    patch.setControlPoints(controlPoints);
 	trackPoints = loadControlPoints("trackpoints.csv");
     track.setControlPoints(trackPoints);
     objectPoints = loadControlPoints("objectpoints.csv");
@@ -680,13 +680,13 @@ int main( int argc, char **argv ) {
 	
     //loadControlPoints("trackpoints.csv");
     //track.setControlPoints(controlPoints);
-=======
+
     //loadControlPoints("patchpoints.csv");
     //patch.setControlPoints(controlPoints);
     
     loadControlPoints("trackpoints.csv");
     track.setControlPoints(controlPoints);
->>>>>>> track
+
     
     // TODO #03: make sure a control point CSV file was passed in.  Then read the points from file
     // TODO #03: make sure a control point CSV file was passed in.  Then read the points from file

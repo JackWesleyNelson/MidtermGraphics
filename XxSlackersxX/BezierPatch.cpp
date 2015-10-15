@@ -4,8 +4,6 @@ using std::vector;
 
 BezierPatch::BezierPatch(vector<Point> controlPoints, float u, float v) {
     this->controlPoints = controlPoints;
-    this->u = u;
-    this->v = v;
 }
 
 BezierPatch::BezierPatch() {
@@ -14,7 +12,7 @@ BezierPatch::BezierPatch() {
 }
 
 void BezierPatch::draw(const int resolution) {
-    drawPoints();
+    //drawPoints();
     //connectPoints(resolution);
     float u = 0;
     float v = 0;
@@ -33,11 +31,14 @@ void BezierPatch::draw(const int resolution) {
             
             Point pSurface = evaluateCurve(p0, p1, p2, p3, v);
             
-            surfacePoints[(int)(u * du)][(int)(v * dv)] = pSurface;
+            
+            surfacePoints[(int)(u / du)][(int)(v / dv)] = pSurface;
         }
     }
     
     glPushMatrix();
+    glColor3f(.8, 0, 0);
+
     glBegin(GL_QUAD_STRIP);
     Point p;
     Point pU;
@@ -51,10 +52,12 @@ void BezierPatch::draw(const int resolution) {
             pUV = surfacePoints[i + 1][j + 1];
             pV = surfacePoints[i][j+1];
             
+           
             glVertex3f(p.getX(), p.getY(), p.getZ());
             glVertex3f(pU.getX(), pU.getY(), pU.getZ());
             glVertex3f(pUV.getX(), pUV.getY(), pUV.getZ());
             glVertex3f(pV.getX(), pV.getY(), pV.getZ());
+            
         }
     }
     glEnd();
