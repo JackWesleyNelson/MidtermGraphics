@@ -50,7 +50,7 @@ void BezierCurve::calculateCurvePoints() {
 
 void BezierCurve::calculateCurvePointsArcLength(float ds) {
     float u = 0;
-
+    ds = 0.01;
     
     vector<std::pair<float, float> > tarcLengthTable;
     
@@ -61,8 +61,7 @@ void BezierCurve::calculateCurvePointsArcLength(float ds) {
     float y;
     
     for (int i = 1; i < curvePoints.size(); ++i) {
-        x = u;   
-        
+    
         float dx = (curvePoints[i - 1].getX() - curvePoints[i].getX());
         float dy = (curvePoints[i - 1].getY() - curvePoints[i].getY());
         float dz = (curvePoints[i - 1].getZ() - curvePoints[i].getZ());
@@ -74,7 +73,7 @@ void BezierCurve::calculateCurvePointsArcLength(float ds) {
         float distance = sqrtf(dx + dy + dz);
         
         
-        tarcLengthTable.push_back(std::make_pair(x,distance));
+        tarcLengthTable.push_back(std::make_pair(u,distance + tarcLengthTable[i-1].second));
         u += du;
     }
     
@@ -91,7 +90,12 @@ void BezierCurve::calculateCurvePointsArcLength(float ds) {
         if (tarcLengthTable[i].second > s) {
             //linear interpolate between the two values
             dt = tarcLengthTable[i].first - tarcLengthTable[i - 1].first;
-            t = (((s - tarcLengthTable[i - 1].second) / (tarcLengthTable[i].second - tarcLengthTable[i - 1].second)) * (dt)) +  tarcLengthTable[i - 1].first;
+            
+            float top = s - tarcLengthTable[i - 1].second;
+            float bottom = tarcLengthTable[i].second - tarcLengthTable[i - 1].second;
+            float low = tarcLengthTable[i - 1].first;
+            
+            t = (((top) / (bottom)) * (dt)) + low;
             
             tValues.push_back(t);
         }
@@ -104,21 +108,15 @@ void BezierCurve::calculateCurvePointsArcLength(float ds) {
 
     
     float tVal = 0;
-    
+    int i = 0;
     for (vector<float>::iterator iter = tValues.begin(); iter != tValues.end(); ++iter) {
         tVal = *iter;
+        
         int curveN = (int) tVal;
+        curveN *= 3;
         
-        
-        if (curveN == 0) {
-            curvePoint = evaluateCurve(controlPoints[0], controlPoints[1], controlPoints[2], controlPoints[3], *iter);
-        }
-        else {
-            //finding the right indices of the control points
-            curveN *= 3;
-            curvePoint = evaluateCurve(controlPoints[curveN], controlPoints[curveN + 1], controlPoints[curveN + 2], controlPoints[curveN + 3], *iter);
-        
-        }
+        curvePoint = evaluateCurve(controlPoints[curveN], controlPoints[curveN + 1], controlPoints[curveN + 2], controlPoints[curveN + 3], *iter);
+        i += 1;
         curvePointsArcLength.push_back(curvePoint);
     }
 }

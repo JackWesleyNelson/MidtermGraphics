@@ -509,8 +509,8 @@ void myTimer( int value ) {
 	if(curveIt1 >= trackCurvePoints.size())
 		curveIt1 = 1;
 	curveIt2++;
-	if(curveIt2 >= trackCurvePointsArcLength.size())
-		curveIt2 = 1;
+	/*if(curveIt2 >= trackCurvePointsArcLength.size())
+		curveIt2 = 1;*/
 	
 	if(curveIt1%400 == 0)
 		chars[1].setTheta(chars[1].getTheta()-90);
@@ -519,9 +519,9 @@ void myTimer( int value ) {
 	chars[1].setY(trackCurvePoints[curveIt1].getY()+2.5);
 	chars[1].setZ(trackCurvePoints[curveIt1].getZ());
 	
-	chars[2].setX(trackCurvePointsArcLength[curveIt2].getX());
+	/*chars[2].setX(trackCurvePointsArcLength[curveIt2].getX());
 	chars[2].setY(trackCurvePointsArcLength[curveIt2].getY()+2.5);
-	chars[2].setZ(trackCurvePointsArcLength[curveIt2].getZ());
+	chars[2].setZ(trackCurvePointsArcLength[curveIt2].getZ());*/
 	
 	for(int i=0;i<3;i++) {
 		chars[i].incrementEyeTheta();
@@ -718,10 +718,10 @@ int main( int argc, char **argv ) {
 	trackPoints = loadControlPoints("trackpoints.csv");
     track.setControlPoints(trackPoints);
     track.calculateCurvePoints();
-    track.calculateCurvePointsArcLength(1);
+    //track.calculateCurvePointsArcLength(1);
     
     trackCurvePoints = track.getCurvePoints();
-    trackCurvePointsArcLength = track.getCurvePointsArcLength();
+    //trackCurvePointsArcLength = track.getCurvePointsArcLength();
     
     
 
