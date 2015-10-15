@@ -69,6 +69,7 @@ using namespace std;
 #include "Character.h"
 #include "Light.h"
 #include "BezierCurve.h"
+#include "Tree.h"
 #include "BezierPatch.h"
 // GLOBAL VARIABLES ////////////////////////////////////////////////////////////
 
@@ -155,6 +156,13 @@ void drawGrid() {
 	*	As noted above, we are done drawing with OpenGL Primitives, so we
 	*	must turn lighting back on.
 	*/
+}
+
+void drawTrees() {
+	for(int i=0; i< objectPoints.size();i++) {
+		Tree t = Tree(objectPoints[i]);
+		t.draw();
+	}
 }
 
 //Modifies the FPS variable and displays it onscreen
@@ -304,14 +312,14 @@ void initScene()  {
 	camera.setPhi(M_PI / 2.8f);
 	camera.recomputeOrientation();
 	
-	chars[0] = Character(0, 0, 0);
+	//chars[0] = Character(0, 0, 0);
 	chars[1] = Character(5, 0, 5);
-	chars[1].setColor( .3, 1, .3, 1);
+	chars[1].setColor( .3, .3, 1, 1);
 	chars[1].setName("Dibstix");
 	chars[2] = Character(10, 0,10);
 	chars[2].setColor( 1, .3, .3, 1);
 	chars[2].setName("Thing 2");
-	
+
 	arcamera = ARCamera(chars[charIt].getX(), chars[charIt].getY(), chars[charIt].getZ());
 	arcamera.setTheta(M_PI / 3.0f);
 	arcamera.setPhi(-M_PI / 2.8f);
@@ -352,6 +360,8 @@ void renderScene(void) {
 	for(int i=0;i<3;i++)
 		chars[i].draw();
 	
+	drawTrees();
+	
 	updateFPS();
 	
 	//push the back buffer to the screen
@@ -376,16 +386,17 @@ void renderScene2(void) {
     //patch.draw(1000);
     track.draw(1000);
 	glEnable(GL_LIGHTING);
-    
-	
-	for(int i=0;i<3;i++)
-		chars[i].draw();
 	
 	glPushMatrix(); {
 		glTranslatef(chars[0].getX(), chars[0].getY(), chars[0].getZ());		// X, Y and Z position
 		glRotatef(-chars[0].getTheta() + 90, 0, 1, 0);
 		light2.spotlight();
 	}; glPopMatrix();
+	
+	for(int i=0;i<3;i++)
+		chars[i].draw();
+	
+	drawTrees();
 	
 	glutSwapBuffers();
 }
@@ -658,8 +669,8 @@ int main( int argc, char **argv ) {
     //patch.setControlPoints(controlPoints);
 	trackPoints = loadControlPoints("trackpoints.csv");
     track.setControlPoints(trackPoints);
-	cout << trackPoints[0].getX() << endl;
-    objectPoints = loadControlPoints("objectPoints.csv");
+    objectPoints = loadControlPoints("objectpoints.csv");
+	
 	
 	
     //loadControlPoints("trackpoints.csv");
@@ -709,6 +720,10 @@ int main( int argc, char **argv ) {
 	
 	glutSetWindow( winMain );
     
+	float boo[4] = { 0.0, 0.0, 0.0, 1.0 };
+	light1.setAmbient(boo);
+	light2.setAmbient(boo);
+	
     light1.init();
     light2.init();
     

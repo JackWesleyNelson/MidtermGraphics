@@ -111,6 +111,7 @@ void Character::drawHead() {
 
 void Character::drawName() {
 	glDisable(GL_LIGHTING);
+	
 	// the text
 	//char scrtext[64] = "Zilch";
 
@@ -126,6 +127,7 @@ void Character::drawName() {
 		glutStrokeCharacter(GLUT_STROKE_ROMAN, name[c]);
 	glPopMatrix();
 	glEnable(GL_LIGHTING);
+	
 }
 
 void Character::draw() {
