@@ -11,8 +11,9 @@ BezierPatch::BezierPatch() {
     
 }
 
+
 void BezierPatch::draw(const int resolution) {
-    drawPoints();
+    //drawPoints();
     //connectPoints(resolution);
     float u = 0;
     float v = 0;
@@ -90,9 +91,6 @@ void BezierPatch::draw(const int resolution) {
     }
     
     glPopMatrix();
-    
-    
-    
 }
 
 

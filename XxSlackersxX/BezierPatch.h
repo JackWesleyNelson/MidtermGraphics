@@ -22,6 +22,7 @@ public:
 private:
     Point evaluate();
     std::vector<Point> controlPoints;
+    Point surfacePoints[101][101];
     
     
 };
