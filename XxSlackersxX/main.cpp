@@ -672,6 +672,10 @@ int main( int argc, char **argv ) {
 
     controlPoints = loadControlPoints("patchpoints.csv");
     patch.setControlPoints(controlPoints);
+    
+    
+    
+    
 	trackPoints = loadControlPoints("trackpoints.csv");
     track.setControlPoints(trackPoints);
     objectPoints = loadControlPoints("objectpoints.csv");
