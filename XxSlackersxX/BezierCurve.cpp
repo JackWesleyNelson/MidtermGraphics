@@ -59,7 +59,6 @@ void BezierCurve::calculateCurvePointsArcLength(float ds) {
     
     for (int i = 1; i < curvePoints.size(); ++i) {
         x = u;
-        y = (distance(curvePoints[i - 1], curvePoints[i])) + tarcLengthTable[i - 1].second;
         
         
         float dx = (curvePoints[i - 1].getX() - curvePoints[i].getX());
