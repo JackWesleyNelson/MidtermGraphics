@@ -1,4 +1,5 @@
 #include "BezierPatch.h"
+#include "Material.h"
 #include <iostream>
 using std::vector;
 
@@ -61,7 +62,6 @@ void BezierPatch::draw(const int resolution) {
     Point pV;
     Point pUV;
 
-    
     for (int i = 0; i < 100; ++i) {
         for (int j = 0; j < 100; ++j) {
             p = surfacePoints[i][j];
@@ -71,7 +71,7 @@ void BezierPatch::draw(const int resolution) {
             
             glPushMatrix();
             glTranslatef(p.getX(), p.getY(), p.getZ());
-            glColor3f(0,1,0);
+            glColor3f(.3,1,.3);
             GLUquadric *quad;
             quad = gluNewQuadric();
             gluQuadricDrawStyle( quad, GLU_FILL);

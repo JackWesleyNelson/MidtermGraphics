@@ -90,6 +90,8 @@ float fpX, fpZ;
 
 float frameTime, fps=0, base_time=0, frames=0;	// for FPS counter
 
+GLuint environmentDL;			
+
 GLint menuId;				    // handle for our menu
 
 vector<Point> controlPoints;
@@ -183,6 +185,21 @@ void drawTrees() {
 		Tree t = Tree(objectPoints[i]);
 		t.draw();
 	}
+}
+
+void generateEnvironmentDL() {
+    environmentDL = glGenLists(1);
+    glNewList(environmentDL, GL_COMPILE);
+
+    drawTrack();
+	drawTrees();
+	
+	glDisable(GL_LIGHTING);
+	drawGrid();
+	patch.draw(100);
+	glEnable(GL_LIGHTING);
+	
+    glEndList();
 }
 
 //Modifies the FPS variable and displays it onscreen
@@ -359,21 +376,18 @@ void renderScene(void) {
 	// clear the render buffer
 	glDrawBuffer(GL_BACK);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
 	// update the modelview matrix based on the camera's position
 	glMatrixMode(GL_MODELVIEW);                           // make sure we aren't changing the projection matrix!
 	glLoadIdentity();
+	
+	
+	
 	if( freecamON )
 		camera.lookAt();
 	else arcamera.lookAt();
-	glDisable(GL_LIGHTING);
-	drawGrid();
-	patch.draw(100);
-    track.draw(0);
-	glEnable(GL_LIGHTING);
 	
-	
-	
+	glCallList( environmentDL );
+
 	glPushMatrix(); {
 		glTranslatef(chars[0].getX(), chars[0].getY(), chars[0].getZ());		// X, Y and Z position
 		glRotatef(-chars[0].getTheta() + 90, 0, 1, 0);
@@ -382,9 +396,6 @@ void renderScene(void) {
 	
 	for(int i=0;i<3;i++)
 		chars[i].draw();
-	
-	drawTrack();
-	drawTrees();
 	
 	updateFPS();
 	
@@ -401,17 +412,12 @@ void renderScene2(void) {
 	
 	glMatrixMode(GL_MODELVIEW);                           // make sure we aren't changing the projection matrix!
 	glLoadIdentity();
+	
 	gluLookAt(chars[charIt2].getX(), chars[charIt2].getY()+.7, chars[charIt2].getZ(),
 	fpX, chars[charIt2].getY()+.6, fpZ,
 	0, 1, 0);
 	
-	glDisable(GL_LIGHTING);
-	drawGrid();
-	patch.draw(100);
-    track.draw(0);
-	glEnable(GL_LIGHTING);
-	
-	
+	glCallList( environmentDL );
 	
 	glPushMatrix(); {
 		glTranslatef(chars[0].getX(), chars[0].getY(), chars[0].getZ());		// X, Y and Z position
@@ -421,9 +427,6 @@ void renderScene2(void) {
 	
 	for(int i=0;i<3;i++)
 		chars[i].draw();
-	
-	drawTrack();
-	drawTrees();
 	
 	glutSwapBuffers();
 }
@@ -781,6 +784,8 @@ int main( int argc, char **argv ) {
 	
 	glutHideWindow();
 	
+	generateEnvironmentDL();
+	
 	glutSetWindow( winMain );
     
 	float boo[4] = { 0.0, 0.0, 0.0, 1.0 };
@@ -790,7 +795,7 @@ int main( int argc, char **argv ) {
     light1.init();
     light2.init();
     
-    
+    generateEnvironmentDL();
 	
     // and enter the GLUT loop, never to exit.
     glutMainLoop();
