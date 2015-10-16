@@ -354,7 +354,7 @@ void initScene()  {
 	chars[1].setColor( .3, .3, 1, 1);
 	chars[1].setName("Dibstix");
 	chars[1].setMoving(true);
-	chars[2] = Character(10, 0,10);
+	chars[2] = Character(-10, 0,15);
 	chars[2].setColor( 1, .3, .3, 1);
 	chars[2].setName("Thing 2");
 	chars[2].setMoving(true);
@@ -713,7 +713,6 @@ vector<Point> loadControlPoints( char* filename ) {
 //
 ////////////////////////////////////////////////////////////////////////////////
 int main( int argc, char **argv ) {
-
 
     controlPoints = loadControlPoints("patchpoints.csv");
     patch.setControlPoints(controlPoints);
